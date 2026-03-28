@@ -1,0 +1,2352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexusCS — Customer Success Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════ */
+/* WARM EXECUTIVE THEME — Light, legible, calm   */
+/* Designed for stakeholders & senior leadership  */
+/* ══════════════════════════════════════════════ */
+:root{
+  --bg:#faf8f5;--s1:#ffffff;--s2:#f3f0ec;--s3:#ebe7e1;
+  --b1:#e0dbd4;--b2:#cfc8bf;--b3:#b8b0a5;
+  --g:#0d9373;--b:#2563eb;--o:#d97706;
+  --w:#b45309;--r:#dc2626;--ok:#059669;
+  --t1:#1a1714;--t2:#5c564e;--t3:#8a8279;
+  --glow:0 0 30px rgba(13,147,115,.1);
+  --shadow-sm:0 1px 3px rgba(26,23,20,.06);
+  --shadow-md:0 4px 16px rgba(26,23,20,.08);
+  --shadow-lg:0 12px 40px rgba(26,23,20,.1);
+  --radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Source Serif 4',Georgia,serif;background:var(--bg);color:var(--t1);cursor:default;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px;}
+
+/* ── ANIMATED BACKGROUND ─────────────────────── */
+.bg-mesh{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 600px 400px at 20% 30%, rgba(13,147,115,.04) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 500px at 80% 70%, rgba(37,99,235,.03) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 50% 10%, rgba(217,119,6,.03) 0%, transparent 70%);
+  animation:meshDrift 25s ease-in-out infinite alternate;
+}
+@keyframes meshDrift{
+  0%{background-position:0% 0%,100% 100%,50% 0%;}
+  50%{background-position:30% 20%,70% 80%,60% 30%;}
+  100%{background-position:10% 40%,90% 60%,40% 20%;}
+}
+
+/* ── LOGIN SCREEN ────────────────────────────── */
+#loginScreen{
+  position:fixed;inset:0;z-index:10000;
+  background:var(--bg);
+  display:none;align-items:center;justify-content:center;
+  transition:opacity .5s ease,transform .5s ease;
+}
+#loginScreen.out{opacity:0;transform:scale(1.02);pointer-events:none;}
+
+.login-card{
+  width:420px;max-width:90vw;background:var(--s1);
+  border:1px solid var(--b1);border-radius:20px;
+  padding:44px 40px;position:relative;z-index:2;
+  box-shadow:var(--shadow-lg);
+  animation:loginIn .6s ease both;
+}
+@keyframes loginIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+.login-logo{
+  font-family:'Outfit',sans-serif;font-weight:800;font-size:32px;
+  letter-spacing:-1.5px;color:var(--t1);text-align:center;margin-bottom:4px;
+}
+.login-logo span{color:var(--g);}
+.login-tagline{
+  text-align:center;font-size:14px;color:var(--t2);margin-bottom:32px;font-weight:300;
+}
+.login-field{margin-bottom:18px;}
+.login-label{
+  display:block;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;
+  color:var(--t3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;
+}
+.login-input{
+  width:100%;background:var(--s2);border:1.5px solid var(--b1);border-radius:10px;
+  padding:12px 15px;font-size:15px;font-family:'Source Serif 4',serif;color:var(--t1);
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.login-input:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(13,147,115,.1);}
+.login-input::placeholder{color:var(--b3);}
+.login-select{
+  width:100%;background:var(--s2);border:1.5px solid var(--b1);border-radius:10px;
+  padding:12px 15px;font-size:15px;font-family:'Source Serif 4',serif;color:var(--t1);
+  outline:none;cursor:pointer;-webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a8279' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+  transition:border-color .2s;
+}
+.login-select:focus{border-color:var(--g);}
+.login-btn{
+  width:100%;background:var(--g);color:#fff;border:none;border-radius:10px;
+  padding:14px;font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;
+  cursor:pointer;transition:all .2s;margin-top:8px;letter-spacing:-.2px;
+}
+.login-btn:hover{background:#0ba882;box-shadow:0 6px 24px rgba(13,147,115,.25);transform:translateY(-1px);}
+.login-error{
+  background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.15);
+  border-radius:8px;padding:10px 14px;font-size:13px;color:var(--r);
+  margin-bottom:16px;display:none;
+}
+.login-footer{
+  text-align:center;margin-top:24px;font-size:12px;color:var(--t3);
+}
+
+/* ── LAUNCH SCREEN ────────────────────────────── */
+#launch{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .6s ease, transform .6s ease;
+}
+#launch.out{opacity:0;transform:scale(1.03);pointer-events:none;}
+
+.launch-content{position:relative;z-index:2;text-align:center;}
+.launch-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(13,147,115,.06);border:1px solid rgba(13,147,115,.15);
+  border-radius:20px;padding:6px 16px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--g);letter-spacing:.5px;
+  margin-bottom:28px;animation:fadeUp .6s ease .2s both;
+}
+.launch-dot{width:7px;height:7px;background:var(--g);border-radius:50%;box-shadow:0 0 8px rgba(13,147,115,.4);animation:blink 1.2s infinite;}
+.launch-logo{
+  font-family:'Outfit',sans-serif;font-weight:800;font-size:64px;
+  letter-spacing:-3px;line-height:1;margin-bottom:10px;
+  color:var(--t1);animation:fadeUp .6s ease .3s both;
+}
+.launch-logo span{color:var(--g);}
+.launch-tagline{font-size:18px;color:var(--t2);font-weight:300;margin-bottom:8px;animation:fadeUp .6s ease .4s both;}
+.launch-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t3);margin-bottom:44px;animation:fadeUp .6s ease .5s both;}
+.launch-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--g);color:#fff;border:none;border-radius:12px;padding:16px 38px;
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;
+  cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(13,147,115,.2);
+  animation:fadeUp .6s ease .6s both;letter-spacing:-.2px;
+}
+.launch-btn:hover{transform:translateY(-2px);box-shadow:0 8px 36px rgba(13,147,115,.3);background:#0ba882;}
+.launch-btn svg{transition:transform .2s;}
+.launch-btn:hover svg{transform:translateX(4px);}
+.launch-stats{display:flex;gap:44px;margin-top:52px;animation:fadeUp .6s ease .7s both;}
+.ls-item{text-align:center;}
+.ls-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:26px;color:var(--g);}
+.ls-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:1px;margin-top:3px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+/* ── APP SHELL ────────────────────────────────── */
+#app{
+  display:grid;grid-template-columns:240px 1fr;grid-template-rows:56px 1fr;
+  height:100vh;opacity:0;transition:opacity .5s ease .1s;position:relative;z-index:1;
+}
+#app.visible{opacity:1;}
+
+/* ── TOPBAR ────────────────────────────────────── */
+.topbar{
+  grid-column:1/-1;
+  background:var(--s1);border-bottom:1px solid var(--b1);
+  display:flex;align-items:center;padding:0 22px;gap:16px;z-index:100;
+  box-shadow:var(--shadow-sm);
+}
+.logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:18px;letter-spacing:-.8px;display:flex;align-items:center;gap:8px;white-space:nowrap;color:var(--t1);}
+.logo span{color:var(--g);}
+.logo-pulse{width:8px;height:8px;background:var(--g);border-radius:50%;box-shadow:0 0 10px rgba(13,147,115,.4);animation:blink 2s infinite;}
+.search-wrap{flex:1;max-width:340px;position:relative;}
+.search-bar{
+  width:100%;background:var(--s2);border:1.5px solid var(--b1);border-radius:9px;
+  padding:8px 14px 8px 36px;color:var(--t1);font-family:'JetBrains Mono',monospace;font-size:12px;
+  outline:none;transition:border-color .2s;
+}
+.search-bar:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(13,147,115,.08);}
+.search-bar::placeholder{color:var(--b3);}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:13px;}
+.topbar-right{display:flex;align-items:center;gap:12px;margin-left:auto;}
+.live-chip{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(13,147,115,.06);border:1px solid rgba(13,147,115,.15);
+  border-radius:20px;padding:4px 12px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--g);letter-spacing:.5px;
+}
+.live-d{width:6px;height:6px;background:var(--ok);border-radius:50%;animation:blink 1.2s infinite;}
+.notif-btn{
+  width:34px;height:34px;background:var(--s2);border:1.5px solid var(--b1);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;
+  position:relative;transition:all .2s;
+}
+.notif-btn:hover{border-color:var(--b2);background:var(--s3);}
+.notif-pip{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--r);border-radius:50%;border:2px solid var(--s1);}
+.avatar{
+  width:34px;height:34px;background:linear-gradient(135deg,var(--g),var(--b));
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;color:#fff;cursor:pointer;
+}
+.user-name{font-size:13px;color:var(--t2);font-family:'Outfit',sans-serif;font-weight:500;}
+.logout-btn{
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);
+  cursor:pointer;padding:3px 8px;border-radius:5px;border:1px solid var(--b1);
+  background:transparent;transition:all .15s;
+}
+.logout-btn:hover{color:var(--r);border-color:rgba(220,38,38,.3);background:rgba(220,38,38,.04);}
+
+/* ── TOUR BAR ─────────────────────────────────── */
+#tour-bar{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--s1);border:1.5px solid var(--b2);border-radius:16px;
+  padding:12px 18px;display:flex;align-items:center;gap:14px;
+  z-index:500;box-shadow:var(--shadow-lg);
+  opacity:0;pointer-events:none;transition:opacity .3s;min-width:600px;
+}
+#tour-bar.show{opacity:1;pointer-events:all;}
+.tour-step-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:1px;white-space:nowrap;}
+.tour-msg{font-size:13px;color:var(--t2);flex:1;font-family:'Source Serif 4',serif;}
+.tour-msg strong{color:var(--t1);}
+.tour-dots{display:flex;gap:5px;}
+.tour-dot{width:7px;height:7px;border-radius:50%;background:var(--b2);transition:all .2s;}
+.tour-dot.active{background:var(--g);box-shadow:0 0 8px rgba(13,147,115,.3);}
+.tour-dot.done{background:var(--ok);}
+.tour-btn{padding:7px 16px;border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;border:none;transition:all .15s;}
+.tour-next{background:var(--g);color:#fff;}
+.tour-next:hover{background:#0ba882;}
+.tour-skip{background:transparent;color:var(--t3);border:1.5px solid var(--b1);}
+.tour-skip:hover{color:var(--t2);border-color:var(--b2);}
+
+/* ── SIDEBAR ───────────────────────────────────── */
+.sidebar{
+  background:var(--s1);border-right:1px solid var(--b1);
+  padding:16px 0;overflow-y:auto;display:flex;flex-direction:column;
+  box-shadow:2px 0 8px rgba(26,23,20,.03);
+}
+.nav-section{margin-bottom:20px;}
+.nav-label{font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;letter-spacing:1.2px;color:var(--t3);padding:0 18px;margin-bottom:4px;text-transform:uppercase;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:10px 18px;cursor:pointer;
+  font-size:14px;color:var(--t2);transition:all .15s;border-left:3px solid transparent;
+  font-family:'Outfit',sans-serif;font-weight:400;
+}
+.nav-item:hover{color:var(--t1);background:rgba(13,147,115,.03);}
+.nav-item.active{color:var(--g);background:rgba(13,147,115,.05);border-left-color:var(--g);font-weight:600;}
+.nav-item.highlight{animation:navPulse 1s ease 2;}
+@keyframes navPulse{0%,100%{background:transparent;}50%{background:rgba(13,147,115,.08);}}
+.nav-icon{font-size:15px;width:18px;text-align:center;}
+.nav-badge{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:500;}
+.nb-red{background:rgba(220,38,38,.08);color:var(--r);border:1px solid rgba(220,38,38,.15);}
+.nb-blue{background:rgba(37,99,235,.08);color:var(--b);border:1px solid rgba(37,99,235,.15);}
+.nb-green{background:rgba(5,150,105,.08);color:var(--ok);border:1px solid rgba(5,150,105,.15);}
+.nb-orange{background:rgba(217,119,6,.08);color:var(--o);border:1px solid rgba(217,119,6,.15);}
+
+.sidebar-footer{padding:14px 18px;margin-top:auto;}
+.savings-card{background:rgba(13,147,115,.04);border:1.5px solid rgba(13,147,115,.12);border-radius:12px;padding:16px;}
+.sav-val{font-family:'Outfit',sans-serif;font-weight:800;font-size:28px;color:var(--g);line-height:1;}
+.sav-sub{font-size:12px;color:var(--t2);margin-top:4px;}
+.mini-prog{height:4px;background:var(--b1);border-radius:3px;margin-top:12px;overflow:hidden;}
+.mini-fill{height:100%;background:linear-gradient(90deg,var(--g),var(--b));border-radius:3px;transition:width 1.5s ease;}
+
+/* ── MAIN ──────────────────────────────────────── */
+.main{overflow-y:auto;background:transparent;position:relative;}
+.view{display:none;padding:26px;animation:viewIn .25s ease;}
+.view.active{display:block;}
+@keyframes viewIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── PAGE HEADER ───────────────────────────────── */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px;}
+.ph-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:24px;letter-spacing:-.5px;color:var(--t1);}
+.ph-sub{font-size:13px;color:var(--t2);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+
+/* ── BUTTONS ───────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:'Outfit',sans-serif;}
+.btn-g{background:var(--g);color:#fff;}
+.btn-g:hover{background:#0ba882;box-shadow:0 4px 16px rgba(13,147,115,.2);}
+.btn-ghost{background:var(--s1);color:var(--t2);border:1.5px solid var(--b1);}
+.btn-ghost:hover{color:var(--t1);border-color:var(--b2);background:var(--s2);}
+.btn-blue{background:rgba(37,99,235,.06);color:var(--b);border:1.5px solid rgba(37,99,235,.15);}
+.btn-blue:hover{background:rgba(37,99,235,.1);}
+
+/* ── CARDS ─────────────────────────────────────── */
+.card{background:var(--s1);border:1.5px solid var(--b1);border-radius:var(--radius);padding:20px;transition:border-color .2s,box-shadow .2s;box-shadow:var(--shadow-sm);}
+.card:hover{border-color:var(--b2);box-shadow:var(--shadow-md);}
+.card.glow{box-shadow:var(--glow);border-color:rgba(13,147,115,.2);}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px;}
+.mb{margin-bottom:20px;}
+
+/* ── STAT CARDS ────────────────────────────────── */
+.stat-lbl{font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;}
+.stat-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:32px;letter-spacing:-1px;margin-bottom:5px;}
+.stat-ch{font-family:'JetBrains Mono',monospace;font-size:11px;display:flex;align-items:center;gap:3px;}
+.up{color:var(--ok);}.dn{color:var(--r);}
+
+/* ── SECTION TITLE ─────────────────────────────── */
+.sec{font-family:'Outfit',sans-serif;font-weight:600;font-size:15px;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--t1);}
+
+/* ── BADGES ────────────────────────────────────── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:10px;white-space:nowrap;font-weight:500;}
+.bc{background:rgba(220,38,38,.06);color:#dc2626;border:1px solid rgba(220,38,38,.12);}
+.bh{background:rgba(217,119,6,.06);color:#b45309;border:1px solid rgba(217,119,6,.12);}
+.bm{background:rgba(202,138,4,.06);color:#a16207;border:1px solid rgba(202,138,4,.12);}
+.bl{background:rgba(5,150,105,.06);color:#059669;border:1px solid rgba(5,150,105,.12);}
+.bop{background:rgba(37,99,235,.06);color:#2563eb;border:1px solid rgba(37,99,235,.12);}
+.bpr{background:rgba(217,119,6,.06);color:#b45309;border:1px solid rgba(217,119,6,.12);}
+.brs{background:rgba(5,150,105,.06);color:#059669;border:1px solid rgba(5,150,105,.12);}
+.be{background:rgba(109,40,217,.06);color:#7c3aed;border:1px solid rgba(109,40,217,.12);}
+.dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+
+/* ── TABLE ─────────────────────────────────────── */
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead tr{border-bottom:2px solid var(--b1);}
+th{font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.8px;text-transform:uppercase;padding:8px 12px;text-align:left;white-space:nowrap;}
+td{padding:12px 12px;font-size:13px;border-bottom:1px solid var(--s3);vertical-align:middle;}
+tr:hover td{background:rgba(13,147,115,.015);}
+tr:last-child td{border-bottom:none;}
+
+/* ── FILTER BAR ────────────────────────────────── */
+.fbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+.fsel{background:var(--s1);border:1.5px solid var(--b1);border-radius:8px;padding:7px 12px;color:var(--t2);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;cursor:pointer;}
+.fsel:focus{border-color:var(--g);}
+
+/* ── ROUTING RULES ─────────────────────────────── */
+.rule{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--s2);border:1.5px solid var(--b1);border-radius:9px;margin-bottom:8px;font-size:13px;transition:all .2s;}
+.rule:hover{border-color:var(--b2);box-shadow:var(--shadow-sm);}
+.rule.on{border-color:rgba(13,147,115,.2);background:rgba(13,147,115,.02);}
+.tog{width:38px;height:20px;background:var(--b2);border-radius:10px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.tog.on{background:var(--g);}
+.tog::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.15);}
+.tog.on::after{left:21px;}
+.rule-cond{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t2);flex:1;}
+.rule-cond strong{color:var(--b);}
+.rule-act{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--g);background:rgba(13,147,115,.05);border:1px solid rgba(13,147,115,.12);padding:3px 8px;border-radius:5px;white-space:nowrap;}
+
+/* ── WORKFLOW ───────────────────────────────────── */
+.wf-canvas{background:var(--s1);border:1.5px solid var(--b1);border-radius:var(--radius);padding:22px;margin-bottom:20px;overflow-x:auto;box-shadow:var(--shadow-sm);}
+.wf-nodes{display:flex;align-items:center;gap:0;min-width:max-content;padding-bottom:8px;}
+.wf-node{background:var(--s2);border:1.5px solid var(--b2);border-radius:10px;padding:14px 16px;min-width:130px;cursor:grab;transition:all .2s;flex-shrink:0;}
+.wf-node:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.wf-node.tr{border-color:rgba(13,147,115,.3);background:rgba(13,147,115,.03);}
+.wf-node.co{border-color:rgba(217,119,6,.3);background:rgba(217,119,6,.03);}
+.wf-node.ac{border-color:rgba(37,99,235,.3);background:rgba(37,99,235,.03);}
+.wf-node.es{border-color:rgba(220,38,38,.3);background:rgba(220,38,38,.03);}
+.wf-icon{font-size:18px;margin-bottom:5px;}
+.wf-tp{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:3px;}
+.wf-lb{font-size:12px;font-weight:500;line-height:1.3;font-family:'Outfit',sans-serif;}
+.wf-arr{padding:0 6px;color:var(--b3);font-size:16px;flex-shrink:0;}
+
+/* ── HEALTH ────────────────────────────────────── */
+.hrow{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.hname{font-size:13px;width:120px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Outfit',sans-serif;font-weight:500;}
+.htrack{flex:1;height:6px;background:var(--s3);border-radius:4px;overflow:hidden;}
+.hfill{height:100%;border-radius:4px;transition:width 1s ease;}
+.hscore{font-family:'JetBrains Mono',monospace;font-size:12px;width:32px;text-align:right;font-weight:500;}
+
+/* ── SLA RINGS ─────────────────────────────────── */
+.rings{display:flex;gap:32px;flex-wrap:wrap;margin-top:16px;}
+.ring-wrap{text-align:center;}
+.ring{position:relative;width:80px;height:80px;}
+.ring svg{transform:rotate(-90deg);}
+.ring-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-pct{font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;}
+.ring-nm{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);}
+
+/* ── TIMELINE ──────────────────────────────────── */
+.tl-item{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--s3);}
+.tl-item:last-child{border-bottom:none;}
+.tl-dc{display:flex;flex-direction:column;align-items:center;padding-top:2px;}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.tl-line{width:1.5px;flex:1;background:var(--b1);margin-top:4px;}
+.tl-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);white-space:nowrap;}
+.tl-ev{font-size:13px;line-height:1.5;}
+.tl-who{font-size:11px;color:var(--t2);margin-top:2px;font-family:'JetBrains Mono',monospace;}
+
+/* ── MODAL ─────────────────────────────────────── */
+.overlay{position:fixed;inset:0;background:rgba(26,23,20,.4);backdrop-filter:blur(6px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
+.overlay.open{display:flex;}
+.modal{background:var(--s1);border:1.5px solid var(--b2);border-radius:18px;padding:30px;width:520px;max-width:100%;animation:modIn .2s ease;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
+@keyframes modIn{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.mod-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.flabel{font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;display:block;}
+.finput,.fselect,.ftextarea{width:100%;background:var(--s2);border:1.5px solid var(--b1);border-radius:9px;padding:10px 13px;color:var(--t1);font-size:13px;font-family:'Source Serif 4',serif;outline:none;transition:border-color .2s;}
+.finput:focus,.fselect:focus,.ftextarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(13,147,115,.08);}
+.fselect option{background:var(--s1);}
+.ftextarea{resize:vertical;min-height:80px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fgrp{margin-bottom:16px;}
+
+/* ── CODE ──────────────────────────────────────── */
+.codeblock{background:var(--s2);border:1.5px solid var(--b1);border-radius:10px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;overflow-x:auto;margin-bottom:14px;position:relative;}
+.ck{color:#d946ef;}.cs{color:#ca8a04;}.cf{color:var(--b);}.cc{color:var(--t3);}.cv{color:var(--g);}
+.copy-btn{position:absolute;top:10px;right:10px;background:var(--s1);border:1px solid var(--b1);color:var(--t2);font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;border-radius:5px;cursor:pointer;}
+.copy-btn:hover{color:var(--t1);border-color:var(--b2);}
+
+/* ── TOAST ─────────────────────────────────────── */
+.toast{position:fixed;bottom:88px;right:24px;background:var(--s1);border:1.5px solid var(--b2);border-left:4px solid var(--g);border-radius:12px;padding:12px 18px;font-size:13px;z-index:9000;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);transform:translateY(80px);opacity:0;transition:all .3s;max-width:360px;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* ── AGENT CHIP ────────────────────────────────── */
+.achip{display:flex;align-items:center;gap:6px;}
+.aav{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'Outfit',sans-serif;}
+
+/* ── ALERT ─────────────────────────────────────── */
+.alert{border-radius:10px;padding:14px 16px;margin-bottom:14px;font-size:13px;display:flex;align-items:flex-start;gap:10px;line-height:1.5;}
+.a-ok{background:rgba(5,150,105,.04);border:1.5px solid rgba(5,150,105,.12);}
+.a-info{background:rgba(37,99,235,.04);border:1.5px solid rgba(37,99,235,.12);}
+.a-warn{background:rgba(217,119,6,.04);border:1.5px solid rgba(217,119,6,.12);}
+
+/* ── TAG ───────────────────────────────────────── */
+.tag{display:inline-block;background:var(--s2);border:1px solid var(--b2);color:var(--t3);font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 7px;border-radius:4px;margin:1px;}
+.tg{border-color:rgba(13,147,115,.2);color:var(--g);background:rgba(13,147,115,.04);}
+.tb{border-color:rgba(37,99,235,.2);color:var(--b);background:rgba(37,99,235,.04);}
+
+/* ── UPLOAD ────────────────────────────────────── */
+.uzone{border:2px dashed var(--b2);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:all .2s;background:var(--s2);}
+.uzone:hover,.uzone.drag{border-color:var(--g);background:rgba(13,147,115,.03);}
+#fileInput{display:none;}
+
+/* ── AUTO STAT ─────────────────────────────────── */
+.astat{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--s3);font-size:13px;}
+.astat:last-child{border-bottom:none;}
+.astatv{font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;color:var(--g);}
+
+/* ── PROG BAR ──────────────────────────────────── */
+.pb{height:5px;background:var(--s3);border-radius:3px;overflow:hidden;margin-top:8px;}
+.pf{height:100%;border-radius:3px;}
+
+/* ── TAB BAR ───────────────────────────────────── */
+.tabbar{display:flex;gap:2px;background:var(--s2);border:1.5px solid var(--b1);border-radius:9px;padding:3px;margin-bottom:16px;width:fit-content;}
+.tab{padding:6px 14px;border-radius:7px;font-size:12px;cursor:pointer;color:var(--t2);transition:all .15s;font-family:'Outfit',sans-serif;font-weight:500;}
+.tab.active{background:var(--s1);color:var(--t1);border:1px solid var(--b1);box-shadow:var(--shadow-sm);}
+
+/* ── DEMO TICKER ───────────────────────────────── */
+.demo-ticker{
+  position:fixed;top:56px;left:240px;right:0;height:34px;
+  background:rgba(13,147,115,.04);border-bottom:1px solid rgba(13,147,115,.1);
+  display:flex;align-items:center;padding:0 18px;gap:14px;z-index:90;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--g);
+  overflow:hidden;display:none;
+}
+.demo-ticker.show{display:flex;}
+.ticker-scroll{display:flex;gap:44px;animation:tickerRun 22s linear infinite;white-space:nowrap;}
+@keyframes tickerRun{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.ticker-item{display:flex;align-items:center;gap:7px;}
+.ticker-dot{width:5px;height:5px;border-radius:50%;background:var(--g);}
+
+/* ── OPS CHATBOT ──────────────────────────────── */
+.chat-fab{
+  position:fixed;bottom:24px;right:24px;z-index:800;
+  width:54px;height:54px;border-radius:14px;border:none;
+  background:linear-gradient(135deg,var(--g),#2563eb);
+  color:#fff;font-size:22px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 24px rgba(13,147,115,.3);transition:all .2s ease;
+}
+.chat-fab:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 8px 36px rgba(13,147,115,.4);}
+.chat-fab.open{border-radius:50%;background:var(--s2);box-shadow:var(--shadow-md);color:var(--t2);border:1.5px solid var(--b1);}
+.chat-panel{
+  position:fixed;bottom:90px;right:24px;z-index:799;
+  width:420px;max-width:calc(100vw - 48px);height:540px;max-height:calc(100vh - 120px);
+  background:var(--s1);border:1.5px solid var(--b2);border-radius:18px;
+  display:flex;flex-direction:column;
+  box-shadow:var(--shadow-lg);
+  transform:translateY(20px) scale(.95);opacity:0;pointer-events:none;
+  transition:all .25s cubic-bezier(.22,1,.36,1);overflow:hidden;
+}
+.chat-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all;}
+.chat-header{padding:14px 18px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px;flex-shrink:0;background:var(--s2);}
+.chat-header-icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,rgba(13,147,115,.1),rgba(37,99,235,.1));border:1px solid rgba(13,147,115,.15);display:flex;align-items:center;justify-content:center;font-size:15px;}
+.chat-header-text{flex:1;}
+.chat-header-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;color:var(--t1);}
+.chat-header-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:.5px;margin-top:1px;}
+.chat-header-status{display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--g);}
+.chat-header-dot{width:6px;height:6px;background:var(--g);border-radius:50%;animation:blink 1.5s infinite;}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
+.chat-msg{max-width:90%;padding:12px 15px;border-radius:12px;font-size:13px;line-height:1.6;animation:chatIn .2s ease;word-wrap:break-word;}
+@keyframes chatIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.chat-msg.user{align-self:flex-end;background:linear-gradient(135deg,rgba(13,147,115,.08),rgba(37,99,235,.05));border:1px solid rgba(13,147,115,.15);color:var(--t1);}
+.chat-msg.bot{align-self:flex-start;background:var(--s2);border:1px solid var(--b1);color:var(--t2);}
+.chat-msg.bot strong{color:var(--t1);}
+.chat-msg.bot .chat-metric{display:inline-flex;align-items:center;gap:3px;background:rgba(13,147,115,.06);border:1px solid rgba(13,147,115,.1);border-radius:5px;padding:1px 7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--g);}
+.chat-msg.system{align-self:center;background:transparent;border:none;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);text-align:center;padding:4px 0;}
+.chat-typing{align-self:flex-start;display:flex;gap:4px;padding:12px 18px;background:var(--s2);border:1px solid var(--b1);border-radius:12px;}
+.chat-typing span{width:6px;height:6px;background:var(--b3);border-radius:50%;animation:typDot .8s ease infinite;}
+.chat-typing span:nth-child(2){animation-delay:.15s;}
+.chat-typing span:nth-child(3){animation-delay:.3s;}
+@keyframes typDot{0%,100%{opacity:.3;transform:translateY(0);}50%{opacity:1;transform:translateY(-3px);}}
+.chat-suggestions{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px 2px;flex-shrink:0;}
+.chat-sug{font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:5px 10px;cursor:pointer;color:var(--t2);transition:all .15s;}
+.chat-sug:hover{border-color:var(--g);color:var(--g);background:rgba(13,147,115,.03);}
+.chat-input-wrap{padding:12px 16px 16px;border-top:1px solid var(--b1);display:flex;gap:8px;flex-shrink:0;background:var(--s1);}
+.chat-input{flex:1;background:var(--s2);border:1.5px solid var(--b1);border-radius:10px;padding:10px 14px;color:var(--t1);font-size:13px;font-family:'Source Serif 4',serif;outline:none;transition:border-color .2s;}
+.chat-input:focus{border-color:var(--g);}
+.chat-input::placeholder{color:var(--b3);}
+.chat-send{width:38px;height:38px;border-radius:10px;border:none;background:var(--g);color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;align-self:flex-end;}
+.chat-send:hover{background:#0ba882;}
+.chat-send:disabled{opacity:.3;cursor:not-allowed;}
+
+/* ── SENTIMENT BADGES ──────────────────────────── */
+.bs-stable{background:rgba(5,150,105,.06);color:#059669;border:1px solid rgba(5,150,105,.12);}
+.bs-monitor{background:rgba(37,99,235,.06);color:#2563eb;border:1px solid rgba(37,99,235,.12);}
+.bs-atrisk{background:rgba(217,119,6,.06);color:#b45309;border:1px solid rgba(217,119,6,.12);}
+.bs-escalate{background:rgba(220,38,38,.06);color:#dc2626;border:1px solid rgba(220,38,38,.12);}
+.bs-escalate .dot{animation:blink 1s infinite;}
+
+/* ── ML PIPELINE ───────────────────────────────── */
+.ml-flow{display:flex;align-items:center;gap:0;overflow-x:auto;padding:8px 0 16px;min-width:max-content;}
+.ml-node{background:var(--s2);border:1.5px solid var(--b2);border-radius:10px;padding:16px 18px;min-width:140px;text-align:center;transition:all .2s;flex-shrink:0;}
+.ml-node:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.ml-node.ml-tr{border-color:rgba(13,147,115,.3);background:rgba(13,147,115,.03);}
+.ml-node.ml-ai{border-color:rgba(109,40,217,.3);background:rgba(109,40,217,.03);}
+.ml-node.ml-rt{border-color:rgba(37,99,235,.3);background:rgba(37,99,235,.03);}
+.ml-node.ml-ac{border-color:rgba(217,119,6,.3);background:rgba(217,119,6,.03);}
+.ml-node.ml-db{border-color:rgba(5,150,105,.3);background:rgba(5,150,105,.03);}
+.ml-node-icon{font-size:22px;margin-bottom:6px;}
+.ml-node-title{font-family:'Outfit',sans-serif;font-weight:600;font-size:12px;margin-bottom:3px;color:var(--t1);}
+.ml-node-desc{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);line-height:1.4;}
+.ml-arr{padding:0 6px;color:var(--b3);font-size:16px;flex-shrink:0;}
+.int-card{background:var(--s2);border:1.5px solid var(--b1);border-radius:10px;padding:16px;transition:all .2s;}
+.int-card:hover{border-color:var(--b2);box-shadow:var(--shadow-sm);}
+.int-status{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;margin-top:8px;}
+.int-ready{background:rgba(37,99,235,.06);color:#2563eb;border:1px solid rgba(37,99,235,.12);}
+.int-active{background:rgba(5,150,105,.06);color:#059669;border:1px solid rgba(5,150,105,.12);}
+
+/* ── RESPONSIVE ────────────────────────────────── */
+@media(max-width:860px){
+  #app{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+  .g4{grid-template-columns:repeat(2,1fr);}
+  #tour-bar{min-width:90vw;}
+}
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+
+<!-- ═══════════════════ LOGIN SCREEN ═══════════════════ -->
+<div id="loginScreen">
+  <div class="bg-mesh"></div>
+  <div class="login-card">
+    <div class="login-logo">Nexus<span>CS</span></div>
+    <div class="login-tagline">Customer Success Operations Platform</div>
+    <div class="login-error" id="loginError">Invalid credentials. Please check your email and password.</div>
+    <div class="login-field">
+      <label class="login-label">Email</label>
+      <input class="login-input" type="email" id="loginEmail" placeholder="you@company.com" autocomplete="email">
+    </div>
+    <div class="login-field">
+      <label class="login-label">Password</label>
+      <input class="login-input" type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password">
+    </div>
+    <div class="login-field">
+      <label class="login-label">Role</label>
+      <select class="login-select" id="loginRole">
+        <option value="lead">CS Lead / Manager</option>
+        <option value="stakeholder">Stakeholder / VP</option>
+        <option value="agent">Support Agent (L1/L2)</option>
+      </select>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-footer">Secured access · Session expires on tab close</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ LAUNCH SCREEN ═══════════════════ -->
+<div id="launch">
+  <div class="launch-content">
+    <div class="launch-badge">
+      <span class="launch-dot"></span>
+      CUSTOMER SUCCESS AUTOMATION PLATFORM
+    </div>
+    <div class="launch-logo">Nexus<span>CS</span></div>
+    <div class="launch-tagline">Automate routing. Protect revenue. Scale CS operations.</div>
+    <div class="launch-sub">Built for CS Leads · Support Managers · Revenue Operations</div>
+    <button class="launch-btn" onclick="startApp()">
+      Launch Dashboard
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="launch-stats">
+      <div class="ls-item"><div class="ls-val">89%</div><div class="ls-label">AUTO-ROUTING</div></div>
+      <div class="ls-item"><div class="ls-val">47h</div><div class="ls-label">SAVED/MONTH</div></div>
+      <div class="ls-item"><div class="ls-val">96.4%</div><div class="ls-label">SLA COMPLIANCE</div></div>
+      <div class="ls-item"><div class="ls-val">4.7★</div><div class="ls-label">AVG CSAT</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="logo"><div class="logo-pulse"></div>Nexus<span>CS</span></div>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-bar" type="text" placeholder="Search tickets, clients, workflows..." id="gSearch" oninput="doSearch()">
+    </div>
+    <div class="topbar-right">
+      <span class="live-chip"><span class="live-d"></span>LIVE</span>
+      <div class="notif-btn" onclick="showNotifs()" style="position:relative;">🔔<span class="notif-pip" id="notif-pip"></span>
+        <div id="notif-panel" style="display:none;position:absolute;top:38px;right:0;width:320px;background:var(--s1);border:1px solid var(--b2);border-radius:10px;box-shadow:0 12px 40px rgba(26,23,20,.15);z-index:200;overflow:hidden;">
+          <div style="padding:10px 14px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;">Notifications</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--t3);cursor:pointer;" onclick="event.stopPropagation();clearNotifs()">Mark all read</span>
+          </div>
+          <div id="notif-list" style="max-height:280px;overflow-y:auto;"></div>
+        </div>
+      </div>
+      <span class="user-name" id="topbar-user">Arjun Sharma · CSM Lead</span><button class="logout-btn" onclick="doLogout()">Logout</button>
+      <div class="avatar">AS</div>
+    </div>
+  </header>
+
+  <!-- DEMO TICKER -->
+  <div class="demo-ticker" id="demoTicker">
+    <span style="font-size:9px;letter-spacing:1px;white-space:nowrap;color:var(--t3)">LIVE EVENTS</span>
+    <div class="ticker-scroll" id="tickerScroll"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <div class="nav-item active" id="nav-dashboard" onclick="gotoView('dashboard',this)"><span class="nav-icon">◈</span>Dashboard</div>
+      <div class="nav-item" id="nav-tickets" onclick="gotoView('tickets',this)"><span class="nav-icon">⊞</span>Ticket Queue<span class="nav-badge nb-red" id="n-open">0</span></div>
+      <div class="nav-item" id="nav-clients" onclick="gotoView('clients',this)"><span class="nav-icon">◉</span>Client Health<span class="nav-badge nb-orange" id="n-risk">0</span></div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Automation</div>
+      <div class="nav-item" id="nav-routing" onclick="gotoView('routing',this)"><span class="nav-icon">⇋</span>Routing Rules<span class="nav-badge nb-green">8</span></div>
+      <div class="nav-item" id="nav-workflows" onclick="gotoView('workflows',this)"><span class="nav-icon">◎</span>Workflows</div>
+      <div class="nav-item" id="nav-triage" onclick="gotoView('triage',this)"><span class="nav-icon">⚡</span>AI Triage</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Analytics</div>
+      <div class="nav-item" id="nav-sla" onclick="gotoView('sla',this)"><span class="nav-icon">◷</span>SLA Tracker</div>
+      <div class="nav-item" id="nav-analytics" onclick="gotoView('analytics',this)"><span class="nav-icon">▦</span>Analytics</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Setup</div>
+      <div class="nav-item" id="nav-import" onclick="gotoView('import',this)"><span class="nav-icon">⇡</span>Import Data</div>
+      <div class="nav-item" id="nav-apidocs" onclick="gotoView('apidocs',this)"><span class="nav-icon">⟨/⟩</span>API Docs</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">AI</div>
+      <div class="nav-item" id="nav-chat" onclick="toggleChat()"><span class="nav-icon">💬</span>Ops Assistant<span class="nav-badge nb-green">AI</span></div>
+      <div class="nav-item" id="nav-mlpipeline" onclick="gotoView('mlpipeline',this)"><span class="nav-icon">⟳</span>ML Pipeline<span class="nav-badge nb-green">LIVE</span></div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="savings-card">
+        <div class="stat-lbl" style="margin:0 0 5px">AUTOMATION SAVINGS</div>
+        <div class="sav-val" id="sav-val">0h</div>
+        <div class="sav-sub" id="sav-sub">saved this month</div>
+        <div class="mini-prog"><div class="mini-fill" id="sav-prog" style="width:0%"></div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main" id="mainArea">
+
+    <!-- ── DASHBOARD ── -->
+    <div class="view active" id="view-dashboard">
+      <div class="ph">
+        <div><div class="ph-title" id="d-greeting">Good morning, Arjun 👋</div><div class="ph-sub" id="d-sub">Loading…</div></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost" onclick="gotoView('import',document.getElementById('nav-import'))">⇡ Import CSV</button>
+          <button class="btn btn-g" onclick="openCreate()">+ New Ticket</button>
+        </div>
+      </div>
+      <div class="g4" id="d-stats" style="grid-template-columns:repeat(5,1fr)"></div>
+      <div class="g2">
+        <div class="card" id="d-sla-card"><div class="sec">🔥 Critical Tickets</div><div id="d-crits"></div></div>
+        <div class="card"><div class="sec">⚡ Automation Activity</div><div id="d-auto"></div></div>
+      </div>
+      <div class="card mb" id="d-chart-card">
+        <div class="sec">📊 Tickets by Category</div>
+        <div id="d-chart" style="display:flex;gap:8px;align-items:flex-end;height:72px;margin-top:10px;"></div>
+      </div>
+      <div class="card mb" id="d-sent-heatmap-card">
+        <div class="sec">🌡 Sentiment Heatmap — by Client</div>
+        <div id="d-sent-heatmap" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- ── TICKETS ── -->
+    <div class="view" id="view-tickets">
+      <div class="ph">
+        <div><div class="ph-title">Ticket Queue</div><div class="ph-sub" id="t-sub">Loading…</div></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost" onclick="exportCSV(DB.tickets,'tickets_export.csv')">⇣ Export</button>
+          <button class="btn btn-g" onclick="openCreate()">+ New Ticket</button>
+        </div>
+      </div>
+      <div class="fbar">
+        <select class="fsel" id="fP" onchange="renderTickets()"><option value="">All Priorities</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select>
+        <select class="fsel" id="fS" onchange="renderTickets()"><option value="">All Status</option><option>Open</option><option>In Progress</option><option>Resolved</option></select>
+        <select class="fsel" id="fC" onchange="renderTickets()"><option value="">All Clients</option></select>
+        <select class="fsel" id="fCat" onchange="renderTickets()"><option value="">All Categories</option></select>
+        <select class="fsel" id="fA" onchange="renderTickets()"><option value="">All Agents</option></select>
+        <select class="fsel" id="fSent" onchange="renderTickets()"><option value="">All Sentiment</option><option>Stable</option><option>Monitor</option><option>At Risk</option><option>Escalate Now</option></select>
+      </div>
+      <div class="card">
+        <div class="tw"><table><thead><tr>
+          <th>ID</th><th>Subject</th><th>Client</th><th>Tier</th><th>Priority</th><th>Status</th><th>Sentiment</th><th>Agent</th><th>SLA</th><th>CSAT</th><th>Category</th>
+        </tr></thead><tbody id="tBody"></tbody></table></div>
+        <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);">
+          <span id="t-count">0 tickets</span>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-ghost" style="font-size:10px;padding:4px 10px" onclick="prevPage()">← Prev</button>
+            <span id="t-page" style="align-self:center">Page 1</span>
+            <button class="btn btn-ghost" style="font-size:10px;padding:4px 10px" onclick="nextPage()">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CLIENTS ── -->
+    <div class="view" id="view-clients">
+      <div class="ph">
+        <div><div class="ph-title">Client Health Monitor</div><div class="ph-sub" id="c-sub">Loading…</div></div>
+        <button class="btn btn-ghost" onclick="exportCSV(DB.clients,'clients_export.csv')">⇣ Export</button>
+      </div>
+      <div class="g3" id="c-risk-cards"></div>
+      <div class="card"><div class="sec">All Accounts — Health Scores</div><div id="c-all" style="margin-top:10px;"></div></div>
+    </div>
+
+    <!-- ── ROUTING ── -->
+    <div class="view" id="view-routing">
+      <div class="ph">
+        <div><div class="ph-title">Routing Rules Engine</div><div class="ph-sub">Automated ticket distribution · 0.3s avg routing time</div></div>
+        <button class="btn btn-g" onclick="addRule()">+ Add Rule</button>
+      </div>
+      <div class="g2 mb">
+        <div class="card"><div class="stat-lbl">Rules Fired Today</div><div class="stat-val" style="color:var(--g)" id="r-fired">–</div><div style="font-size:11px;color:var(--t2)">Across all active rules</div></div>
+        <div class="card"><div class="stat-lbl">Avg Routing Time</div><div class="stat-val" style="color:var(--b)">0.3s</div><div style="font-size:11px;color:var(--t2)">vs ~4min manual</div></div>
+      </div>
+      <div class="card"><div class="sec">⇋ Active Routing Rules</div><div id="rules-wrap" style="margin-top:10px;"></div></div>
+    </div>
+
+    <!-- ── WORKFLOWS ── -->
+    <div class="view" id="view-workflows">
+      <div class="ph">
+        <div><div class="ph-title">Workflow Builder</div><div class="ph-sub">Visual automation for repetitive support tasks</div></div>
+        <div style="display:flex;gap:8px;"><button class="btn btn-ghost" onclick="simulateWorkflow()">▶ Simulate</button><button class="btn btn-g" onclick="saveWorkflow()">Save</button></div>
+      </div>
+      <div class="tabbar" id="wf-tabbar">
+        <div class="tab active" onclick="switchWfTab(0,this)">Escalation Flow</div>
+        <div class="tab" onclick="switchWfTab(1,this)">SLA Breach Alert</div>
+        <div class="tab" onclick="switchWfTab(2,this)">Onboarding Track</div>
+      </div>
+      <div class="wf-canvas">
+        <div id="wf-header" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--t3);letter-spacing:1px;margin-bottom:16px;"></div>
+        <div class="wf-nodes" id="wf-nodes-area"></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;">
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:12px;"><div class="stat-lbl" style="margin:0 0 4px">RUNS (30D)</div><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;color:var(--g)" id="wf-runs">–</div><div style="font-size:10px;color:var(--t2)">100% success</div></div>
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:12px;"><div class="stat-lbl" style="margin:0 0 4px">TIME SAVED</div><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;color:var(--b)" id="wf-time">–</div><div style="font-size:10px;color:var(--t2)">this month</div></div>
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:12px;"><div class="stat-lbl" style="margin:0 0 4px">ESCALATIONS</div><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;color:var(--o)" id="wf-esc">–</div><div style="font-size:10px;color:var(--t2)">before SLA breach</div></div>
+        </div>
+      </div>
+      <div id="wf-sim-result" style="display:none;" class="card mb"></div>
+    </div>
+
+    <!-- ── AI TRIAGE ── -->
+    <div class="view" id="view-triage">
+      <div class="ph">
+        <div><div class="ph-title">AI Triage Engine</div><div class="ph-sub">Real-time classification · sentiment · routing</div></div>
+        <span class="live-chip"><span class="live-d"></span>AI ACTIVE</span>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="sec">📥 Test the Classifier</div>
+          <div class="fgrp">
+            <label class="flabel">Paste ticket body</label>
+            <textarea class="ftextarea" id="triIn" rows="5" placeholder="e.g. Our API has been returning 429 errors since midnight. This is blocking our entire production pipeline — 80 users affected. We have Enterprise SLA." oninput="runTriage()"></textarea>
+          </div>
+          <div id="triResult" style="display:none;">
+            <div style="background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.2);border-radius:8px;padding:14px;margin-top:4px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--t3);margin-bottom:8px;">⚡ AI CLASSIFICATION</div>
+              <div id="triTags" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;"></div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--t3);margin-bottom:5px;">SENTIMENT</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div style="flex:1;height:5px;background:linear-gradient(to right,var(--ok),var(--w),var(--r));border-radius:3px;position:relative;">
+                  <div id="triSDot" style="position:absolute;top:-3px;width:10px;height:10px;background:#fff;border-radius:50%;border:2px solid var(--r);left:80%;transition:left .4s;"></div>
+                </div>
+                <span id="triSLbl" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--r)">URGENT</span>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--t3);margin-bottom:5px;">ROUTING SUGGESTION</div>
+              <div id="triRoute" style="color:var(--g);font-size:12px;font-weight:500;"></div>
+            </div>
+            <button class="btn btn-g" style="width:100%;margin-top:10px;font-size:12px;" onclick="applyTriage()">⚡ Apply & Create Ticket</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec">📊 AI Accuracy Metrics</div>
+          <div id="triMetrics"></div>
+          <div style="margin-top:18px;"><div class="sec">🏷 Top Tags This Month</div><div id="triTops" style="margin-top:6px;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SLA ── -->
+    <div class="view" id="view-sla">
+      <div class="ph">
+        <div><div class="ph-title">SLA Tracker</div><div class="ph-sub" id="sla-sub">Loading…</div></div>
+        <button class="btn btn-ghost" onclick="exportSLA()">⇣ SLA Report</button>
+      </div>
+      <div class="g3 mb">
+        <div class="card"><div class="stat-lbl">Overall Compliance</div><div class="stat-val" style="color:var(--ok)" id="sla-ov">–</div><div style="font-size:11px;color:var(--t2)" id="sla-br">–</div></div>
+        <div class="card"><div class="stat-lbl">At Risk (Open)</div><div class="stat-val" style="color:var(--w)" id="sla-risk">–</div><div style="font-size:11px;color:var(--t2)">escalation queued</div></div>
+        <div class="card"><div class="stat-lbl">Avg Resolution</div><div class="stat-val" style="color:var(--b)" id="sla-avgr">–</div><div style="font-size:11px;color:var(--t2)" id="sla-avgrsub">–</div></div>
+      </div>
+      <div class="card"><div class="sec">SLA Compliance by Priority</div><div class="rings" id="sla-rings"></div></div>
+    </div>
+
+    <!-- ── ANALYTICS ── -->
+    <div class="view" id="view-analytics">
+      <div class="ph">
+        <div><div class="ph-title">Analytics</div><div class="ph-sub" id="an-sub">Loading…</div></div>
+        <button class="btn btn-ghost" onclick="exportCSV(DB.clients,'analytics.csv')">⇣ Export</button>
+      </div>
+      <div class="g4" id="an-kpi"></div>
+      <div class="g2">
+        <div class="card"><div class="sec">⏱ Time Saved by Automation</div><div id="an-time"></div></div>
+        <div class="card"><div class="sec">🏷 Ticket Categories</div><div id="an-cats" style="margin-top:10px;"></div></div>
+      </div>
+      <div class="card mb"><div class="sec">👥 Agent Performance</div><div class="tw" id="an-agents"></div></div>
+    </div>
+
+    <!-- ── IMPORT ── -->
+    <div class="view" id="view-import">
+      <div class="ph"><div><div class="ph-title">Import Company Data</div><div class="ph-sub">Upload CSVs from Zendesk · Freshdesk · Salesforce · HubSpot</div></div></div>
+      <div class="alert a-info mb">
+        <span>ℹ️</span>
+        <div><strong>How it works:</strong> Export tickets & clients from your CRM, download our template, fill in your data, and upload. NexusCS parses your CSV and reloads all dashboards instantly.</div>
+      </div>
+      <div class="g3 mb">
+        <div class="card" style="cursor:pointer;" onclick="triggerUpload('tickets')"><div class="uzone" id="uz-tickets"><div style="font-size:32px;margin-bottom:8px;">🎫</div><div style="font-size:13px;color:var(--t2)">Tickets CSV</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);margin-top:4px;">ticket_id, subject, priority, status…</div><div id="uz-t-status" style="margin-top:10px;"></div></div></div>
+        <div class="card" style="cursor:pointer;" onclick="triggerUpload('clients')"><div class="uzone" id="uz-clients"><div style="font-size:32px;margin-bottom:8px;">🏢</div><div style="font-size:13px;color:var(--t2)">Clients CSV</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);margin-top:4px;">client_id, company_name, health_score…</div><div id="uz-c-status" style="margin-top:10px;"></div></div></div>
+        <div class="card" style="cursor:pointer;" onclick="triggerUpload('agents')"><div class="uzone" id="uz-agents"><div style="font-size:32px;margin-bottom:8px;">👥</div><div style="font-size:13px;color:var(--t2)">Agents CSV</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);margin-top:4px;">agent_id, name, team, capacity…</div><div id="uz-a-status" style="margin-top:10px;"></div></div></div>
+      </div>
+      <input type="file" id="fileInput" accept=".csv" onchange="handleUpload(event)">
+      <div class="card">
+        <div class="sec">⇣ Download Templates</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+          <button class="btn btn-blue" onclick="dlTemplate('tickets')">tickets_template.csv</button>
+          <button class="btn btn-blue" onclick="dlTemplate('clients')">clients_template.csv</button>
+          <button class="btn btn-blue" onclick="dlTemplate('agents')">agents_template.csv</button>
+          <button class="btn btn-ghost" onclick="loadSample()">⚡ Load Sample Data</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── API DOCS ── -->
+    <div class="view" id="view-apidocs">
+      <div class="ph"><div><div class="ph-title">API Integration Guide</div><div class="ph-sub">Connect NexusCS to your existing CRM stack</div></div><span class="live-chip"><span class="live-d"></span>v2.1</span></div>
+      <div class="alert a-ok mb">
+        <span>💼</span>
+        <div><strong>Is this a good hiring project?</strong> <span style="color:var(--t2);">Yes — see the Hiring Guide tab for talking points, resume bullets, and interview scripts.</span></div>
+      </div>
+      <div class="tabbar">
+        <div class="tab active" onclick="switchApiTab('int',this)">Integration</div>
+        <div class="tab" onclick="switchApiTab('ep',this)">Endpoints</div>
+        <div class="tab" onclick="switchApiTab('wh',this)">Webhooks</div>
+        <div class="tab" onclick="switchApiTab('hire',this)">💼 Hiring Guide</div>
+      </div>
+      <div id="api-int">
+        <div class="g2 mb">
+          <div class="card">
+            <div class="sec">🔌 Supported Integrations</div>
+            <div style="font-size:12px;color:var(--t2);line-height:2;">
+              <div><span style="color:var(--ok)">●</span> <strong style="color:var(--t1)">Zendesk</strong> — ticket sync via REST + webhooks</div>
+              <div><span style="color:var(--ok)">●</span> <strong style="color:var(--t1)">Freshdesk</strong> — bi-directional ticket sync</div>
+              <div><span style="color:var(--ok)">●</span> <strong style="color:var(--t1)">HubSpot CRM</strong> — contact, deal, company sync</div>
+              <div><span style="color:var(--ok)">●</span> <strong style="color:var(--t1)">Salesforce</strong> — case + account + contact</div>
+              <div><span style="color:var(--w)">●</span> <strong style="color:var(--t1)">Jira / Linear</strong> — engineering escalations</div>
+              <div><span style="color:var(--w)">●</span> <strong style="color:var(--t1)">Slack</strong> — alerts + /nexuscs command</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="sec">🔑 Auth</div>
+            <div class="codeblock"><button class="copy-btn" onclick="cp(this)">copy</button><span class="cc"># Bearer token auth</span>
+<span class="cf">curl</span> -X GET \
+  https://api.nexuscs.io/v2/tickets \
+  -H <span class="cs">"Authorization: Bearer YOUR_KEY"</span></div>
+          </div>
+        </div>
+        <div class="card mb">
+          <div class="sec">🏢 4-Step Company Setup</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px;">
+            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">1️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Export CSVs</div><div style="font-size:11px;color:var(--t2)">From Zendesk, Freshdesk, or Salesforce</div></div>
+            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">2️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Map Columns</div><div style="font-size:11px;color:var(--t2)">Rename headers to NexusCS schema</div></div>
+            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">3️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Upload</div><div style="font-size:11px;color:var(--t2)">Drag & drop. Dashboards reload instantly.</div></div>
+            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">4️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Automate</div><div style="font-size:11px;color:var(--t2)">Set webhooks for real-time sync</div></div>
+          </div>
+        </div>
+      </div>
+      <div id="api-ep" style="display:none;">
+        <div class="card mb">
+          <div class="sec">📡 REST Endpoints</div>
+          <div id="api-endpoints-list" style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:2.2;"></div>
+        </div>
+      </div>
+      <div id="api-wh" style="display:none;">
+        <div class="card mb">
+          <div class="sec">🔔 Incoming Webhooks</div>
+          <div class="codeblock"><button class="copy-btn" onclick="cp(this)">copy</button><span class="cc"># Zendesk → NexusCS auto-import</span>
+POST https://hooks.nexuscs.io/ingest/<span class="cv">YOUR_TOKEN</span>
+{
+  <span class="cs">"source_tool"</span>: <span class="cs">"zendesk"</span>,
+  <span class="cs">"subject"</span>: <span class="cs">"{{ ticket.title }}"</span>,
+  <span class="cs">"priority"</span>: <span class="cs">"{{ ticket.priority }}"</span>,
+  <span class="cs">"client_email"</span>: <span class="cs">"{{ ticket.requester.email }}"</span>
+}</div>
+        </div>
+      </div>
+      <div id="api-hire" style="display:none;">
+        <div class="g2 mb">
+          <div class="card" style="border-color:rgba(0,229,160,.2)">
+            <div class="sec" style="color:var(--g)">✅ Skills This Proves</div>
+            <div style="font-size:12px;color:var(--t2);line-height:2;">
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">Workflow Automation</strong> — routing rules, escalation, conditional logic</div>
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">SLA Management</strong> — multi-tier config, breach prevention, compliance</div>
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">Client Health Scoring</strong> — churn signals, proactive outreach</div>
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">Data-Driven Ops</strong> — CSV import/export, KPI dashboards, NPS/CSAT</div>
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">API / Integration</strong> — REST, webhooks, CRM integrations</div>
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">AI Triage Concepts</strong> — classification, sentiment, auto-tagging</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="sec">🎯 Interview Scripts</div>
+            <div style="font-size:12px;color:var(--t2);line-height:1.8;">
+              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--b1);">"I built NexusCS to simulate the full ops stack a CS Lead owns — routing, SLA, client health, and automation."</div>
+              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--b1);">"The routing engine saves ~47h/month by auto-assigning tickets based on priority, category, and client tier."</div>
+              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--b1);">"Any company can load their real Zendesk/Freshdesk data via CSV in under 5 minutes."</div>
+              <div>"The health score (0-100) combines open tickets, NPS, CSAT, and last-contact recency to flag churn risk."</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec">📊 Numbers to Quote</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px;">
+            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--g)">89%</div><div style="font-size:10px;color:var(--t2);margin-top:4px">Tickets auto-routed</div></div>
+            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--b)">47h</div><div style="font-size:10px;color:var(--t2);margin-top:4px">Monthly time saved</div></div>
+            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--ok)">96.4%</div><div style="font-size:10px;color:var(--t2);margin-top:4px">SLA compliance</div></div>
+            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--o)">4.7★</div><div style="font-size:10px;color:var(--t2);margin-top:4px">Avg CSAT</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ML PIPELINE ── -->
+    <div class="view" id="view-mlpipeline">
+      <div class="ph">
+        <div><div class="ph-title">ML Pipeline</div><div class="ph-sub">Real-time sentiment scoring · classification · escalation engine</div></div>
+        <span class="live-chip"><span class="live-d"></span>PIPELINE ACTIVE</span>
+      </div>
+
+      <div class="card mb">
+        <div class="sec">⟳ Pipeline Architecture</div>
+        <div class="ml-flow">
+          <div class="ml-node ml-tr"><div class="ml-node-icon">⚡</div><div class="ml-node-title">Ticket Created</div><div class="ml-node-desc">Webhook or manual entry</div></div>
+          <div class="ml-arr">→</div>
+          <div class="ml-node ml-ai"><div class="ml-node-icon">🧠</div><div class="ml-node-title">Sentiment Model</div><div class="ml-node-desc">Keyword classifier (JS) · API-ready</div></div>
+          <div class="ml-arr">→</div>
+          <div class="ml-node ml-rt"><div class="ml-node-icon">⇋</div><div class="ml-node-title">Score Router</div><div class="ml-node-desc">Threshold rules: 0.86+ = escalate</div></div>
+          <div class="ml-arr">→</div>
+          <div class="ml-node ml-ac"><div class="ml-node-icon">🔔</div><div class="ml-node-title">Action Trigger</div><div class="ml-node-desc">Slack alert · Priority bump · CSM notify</div></div>
+          <div class="ml-arr">→</div>
+          <div class="ml-node ml-db"><div class="ml-node-icon">📊</div><div class="ml-node-title">Dashboard Update</div><div class="ml-node-desc">Health score · Sentiment heatmap · SLA feed</div></div>
+        </div>
+      </div>
+
+      <div class="g2 mb">
+        <div class="card">
+          <div class="sec">📈 Live Pipeline Stats</div>
+          <div id="ml-stats"></div>
+        </div>
+        <div class="card">
+          <div class="sec">📊 Sentiment Distribution</div>
+          <div id="ml-dist"></div>
+        </div>
+      </div>
+
+      <div class="card mb">
+        <div class="sec">🚨 Escalation Log</div>
+        <div class="tw"><table><thead><tr>
+          <th>Ticket ID</th><th>Subject</th><th>Client</th><th>Sentiment</th><th>Priority</th><th>Agent</th><th>Recommended Action</th>
+        </tr></thead><tbody id="ml-esc-body"></tbody></table></div>
+      </div>
+
+      <div class="card">
+        <div class="sec">🔌 Integration Readiness — Connect to Live Data Sources</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px;">
+          <div class="int-card">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:18px">🎫</span><strong style="font-family:'Outfit',sans-serif;font-size:13px;">Zendesk</strong></div>
+            <div style="font-size:11px;color:var(--t2)">Native Make.com connector available · webhook setup</div>
+            <div class="int-status int-ready">⊕ Ready to connect</div>
+          </div>
+          <div class="int-card">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:18px">💬</span><strong style="font-family:'Outfit',sans-serif;font-size:13px;">Freshdesk</strong></div>
+            <div style="font-size:11px;color:var(--t2)">Native Make.com connector · Freddy AI compatible</div>
+            <div class="int-status int-ready">⊕ Ready to connect</div>
+          </div>
+          <div class="int-card">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:18px">🔧</span><strong style="font-family:'Outfit',sans-serif;font-size:13px;">JIRA Service Management</strong></div>
+            <div style="font-size:11px;color:var(--t2)">REST API · webhook trigger</div>
+            <div class="int-status int-ready">⊕ Ready to connect</div>
+          </div>
+          <div class="int-card">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:18px">📄</span><strong style="font-family:'Outfit',sans-serif;font-size:13px;">Custom CSV</strong></div>
+            <div style="font-size:11px;color:var(--t2)">Upload ticket export · auto-scored on import</div>
+            <div class="int-status int-active"><span class="dot"></span> Active</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- GUIDED TOUR BAR -->
+<div id="tour-bar">
+  <div>
+    <div class="tour-step-label" id="tour-step-lbl">STEP 1 OF 7</div>
+    <div class="tour-msg" id="tour-msg">Welcome!</div>
+  </div>
+  <div class="tour-dots" id="tour-dots"></div>
+  <button class="tour-btn tour-skip" onclick="endTour()">Skip</button>
+  <button class="tour-btn tour-next" id="tour-next-btn" onclick="nextTourStep()">Next →</button>
+</div>
+
+<!-- CREATE TICKET MODAL -->
+<div class="overlay" id="createOverlay" onclick="if(event.target===this)closeCreate()">
+  <div class="modal">
+    <div class="mod-title">⊞ Create New Ticket</div>
+    <div class="frow">
+      <div class="fgrp"><label class="flabel">Client</label><select class="fselect" id="m-client" onchange="updRoute()"></select></div>
+      <div class="fgrp"><label class="flabel">Priority</label><select class="fselect" id="m-pri" onchange="updRoute()"><option>Low</option><option>Medium</option><option selected>High</option><option>Critical</option></select></div>
+    </div>
+    <div class="fgrp"><label class="flabel">Subject</label><input class="finput" type="text" id="m-sub" placeholder="Describe the issue…"></div>
+    <div class="frow">
+      <div class="fgrp"><label class="flabel">Category</label><select class="fselect" id="m-cat" onchange="updRoute()"><option>API / Integration</option><option>Billing</option><option>Onboarding</option><option>Login / Auth</option><option>Data Export</option><option>Product Bug</option><option>Mobile</option><option>Compliance</option><option>Account Management</option><option>Feature Request</option></select></div>
+      <div class="fgrp"><label class="flabel">Source</label><select class="fselect"><option>Email</option><option>Portal</option><option>Slack</option><option>Phone</option></select></div>
+    </div>
+    <div style="background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.2);border-radius:8px;padding:12px;margin-bottom:14px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--t3);margin-bottom:5px;">⚡ AI ROUTING PREVIEW</div>
+      <div id="m-route" style="font-size:12px;color:var(--g);">→ Loading…</div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeCreate()">Cancel</button>
+      <button class="btn btn-g" onclick="createTicket()">Create & Route</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════ OPS CHATBOT ═══════════════════ -->
+<button class="chat-fab" id="chatFab" onclick="toggleChat()" title="Ops Assistant">💬</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-header">
+    <div class="chat-header-icon">⚡</div>
+    <div class="chat-header-text">
+      <div class="chat-header-title">NexusCS Ops Assistant</div>
+      <div class="chat-header-sub">QUERIES LIVE DASHBOARD DATA</div>
+    </div>
+    <div class="chat-header-status"><span class="chat-header-dot"></span>ONLINE</div>
+    <div id="chatKeyBtn" onclick="promptApiKey()" title="Set API key for external use" style="width:26px;height:26px;border-radius:6px;background:var(--s1);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--g)'" onmouseout="this.style.borderColor='var(--b1)'">🔑</div>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg system">Ops Assistant connected · querying live data</div>
+    <div class="chat-msg bot">Hey Arjun — I can answer questions about your <strong>tickets</strong>, <strong>clients</strong>, <strong>SLA compliance</strong>, and <strong>agent performance</strong>. Ask me anything about the dashboard data.</div>
+  </div>
+  <div class="chat-suggestions" id="chatSugs">
+    <div class="chat-sug" onclick="askSuggestion(this)">Critical open tickets?</div>
+    <div class="chat-sug" onclick="askSuggestion(this)">Which clients are at churn risk?</div>
+    <div class="chat-sug" onclick="askSuggestion(this)">SLA compliance summary</div>
+    <div class="chat-sug" onclick="askSuggestion(this)">Agent with highest load?</div>
+    <div class="chat-sug" onclick="askSuggestion(this)">Which clients have worst sentiment right now?</div>
+    <div class="chat-sug" onclick="askSuggestion(this)">How many tickets need immediate escalation?</div>
+    <div class="chat-sug" onclick="askSuggestion(this)">Show me the sentiment-priority alignment</div>
+  </div>
+  <div class="chat-input-wrap">
+    <input class="chat-input" id="chatInput" type="text" placeholder="Ask about tickets, clients, SLA…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}">
+    <button class="chat-send" id="chatSendBtn" onclick="sendChat()">↑</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// LOGIN SYSTEM
+// ════════════════════════════════════════════════
+const USERS={
+  "arjun@nexuscs.io":{pass:"nexus2026",name:"Arjun Sharma",role:"CSM Lead",initials:"AS"},
+  "priya@nexuscs.io":{pass:"nexus2026",name:"Priya Menon",role:"API Specialist",initials:"PM"},
+  "vp@nexuscs.io":{pass:"nexus2026",name:"Rajesh Kumar",role:"VP Operations",initials:"RK"},
+  "demo@nexuscs.io":{pass:"demo",name:"Demo User",role:"Viewer",initials:"DU"},
+};
+let currentUser=null;
+
+function doLogin(){
+  const email=document.getElementById("loginEmail").value.trim().toLowerCase();
+  const pass=document.getElementById("loginPass").value;
+  const role=document.getElementById("loginRole").value;
+  const err=document.getElementById("loginError");
+  
+  const user=USERS[email];
+  if(user && user.pass===pass){
+    currentUser={...user,email,loginRole:role};
+    err.style.display="none";
+    document.getElementById("loginScreen").classList.add("out");
+    setTimeout(()=>{
+      document.getElementById("loginScreen").style.display="none";
+      document.getElementById("launch").classList.add("show");
+      // Update topbar with logged-in user
+      const topUser=document.getElementById("topbar-user");
+      if(topUser)topUser.textContent=currentUser.name+" · "+currentUser.role;
+      const av=document.querySelector(".avatar");
+      if(av)av.textContent=currentUser.initials;
+    },500);
+  } else {
+    err.style.display="block";
+    document.getElementById("loginPass").value="";
+  }
+}
+
+function doLogout(){
+  currentUser=null;
+  document.getElementById("app").classList.remove("visible");
+  document.getElementById("launch").style.display="flex";
+  document.getElementById("launch").style.opacity="1";
+  document.getElementById("launch").classList.remove("out");
+  toast("Logged out","ok");
+}
+
+// Handle Enter key on login
+document.addEventListener("keydown",function(e){
+  if(e.key==="Enter" && document.getElementById("loginScreen").style.display!=="none"){
+    doLogin();
+  }
+});
+
+// ════════════════════════════════════════════════
+// DATA STORE
+// ════════════════════════════════════════════════
+const DB={tickets:[],clients:[],agents:[]};
+let tPage=0; const PAGE=15;
+
+// ════════════════════════════════════════════════
+// LAUNCH
+// ════════════════════════════════════════════════
+function startApp(){
+  document.getElementById('launch').classList.add('out');
+  setTimeout(()=>{
+    document.getElementById('launch').style.display='none';
+    const app=document.getElementById('app');
+    app.classList.add('visible');
+    loadSample();
+    setTimeout(startTour,800);
+  },600);
+}
+
+// ════════════════════════════════════════════════
+// SAMPLE DATA
+// ════════════════════════════════════════════════
+const TICKETS_CSV=`ticket_id,created_at,subject,client_name,client_tier,priority,status,category,assigned_agent_name,assigned_team,sla_hours,sla_breached,resolution_time_hours,first_response_minutes,csat_score,tags
+TKT-5001,2026-03-01 08:12,API rate limit errors blocking production,Acme Corp,Enterprise,Critical,Resolved,API / Integration,Priya Menon,Tier 2 API,1,FALSE,0.75,4,5,"api,rate-limit,production"
+TKT-5002,2026-03-01 09:30,Invoice shows incorrect tax calculation,GlobalTech,Enterprise,High,Resolved,Billing,Rohan Kapoor,Billing Team,4,FALSE,3.2,12,4,"billing,tax,invoice"
+TKT-5003,2026-03-01 10:15,SSO login broken for all users,NovaSoft,Mid-Market,Critical,Resolved,Login / Auth,Priya Menon,Tier 2 API,1,FALSE,1.1,3,5,"sso,saml,auth,critical"
+TKT-5004,2026-03-01 11:00,Onboarding blocked - missing permissions,NovaSoft,Mid-Market,Medium,Resolved,Onboarding,Arjun Sharma,Onboarding,8,FALSE,5.5,18,4,"onboarding,permissions"
+TKT-5005,2026-03-02 08:00,CSV export fails for large datasets,DataStream Inc,Enterprise,High,Resolved,Data Export,Neha Iyer,Data Team,4,FALSE,2.8,8,5,"export,csv,timeout"
+TKT-5006,2026-03-02 09:45,Mobile app crashes on iOS 17.3,BlueSky Ltd,SMB,Medium,Resolved,Mobile,Anita Mishra,Tier 2 API,8,FALSE,6.2,22,3,"mobile,ios,crash"
+TKT-5007,2026-03-02 11:30,Duplicate charges on annual renewal,CoreLogic,Enterprise,Critical,Resolved,Billing,Rohan Kapoor,Billing Team,1,FALSE,0.9,5,5,"billing,duplicate,refund"
+TKT-5008,2026-03-03 08:15,Data sync latency spike - 45s delays,DataStream Inc,Enterprise,Critical,Resolved,API / Integration,Priya Menon,Tier 2 API,1,FALSE,2.1,4,4,"sync,latency,performance"
+TKT-5009,2026-03-03 09:00,Account seats reduced unexpectedly,Acme Corp,Enterprise,High,Resolved,Billing,Rohan Kapoor,Billing Team,4,FALSE,3.5,10,4,"billing,seats,license"
+TKT-5010,2026-03-04 08:30,API key returning 401 unauthorized,CoreLogic,Enterprise,Critical,Resolved,API / Integration,Priya Menon,Tier 2 API,1,FALSE,0.6,3,5,"api-key,401,auth"
+TKT-5011,2026-03-04 14:00,Payment method update not saving,BlueSky Ltd,SMB,High,Resolved,Billing,Rohan Kapoor,Billing Team,4,FALSE,1.8,11,4,"billing,payment,card"
+TKT-5012,2026-03-05 09:30,SSO group mapping not syncing roles,Apex Dynamics,Mid-Market,High,Resolved,Login / Auth,Priya Menon,Tier 2 API,4,FALSE,2.6,7,5,"sso,azure-ad,roles"
+TKT-5013,2026-03-05 13:30,Churn risk - team frustrated with API issues,Acme Corp,Enterprise,Critical,In Progress,Escalation,Arjun Sharma,Onboarding,1,FALSE,,2,,"churn-risk,escalation"
+TKT-5014,2026-03-06 10:00,Report scheduled job not running at midnight,CoreLogic,Enterprise,High,Resolved,Product Bug,Neha Iyer,Data Team,4,FALSE,3.1,10,4,"scheduler,reports,bug"
+TKT-5015,2026-03-07 09:00,Platform completely down - 503 errors,Acme Corp,Enterprise,Critical,Resolved,Outage,Priya Menon,Tier 2 API,1,FALSE,0.4,2,5,"outage,503,critical"
+TKT-5016,2026-03-08 11:00,Request upgrade to Enterprise plan,PrimeLead Co,SMB,Low,Open,Account Management,Arjun Sharma,Onboarding,24,FALSE,,40,,"upgrade,enterprise"
+TKT-5017,2026-03-09 10:00,API pagination returning duplicates,DataStream Inc,Enterprise,High,In Progress,API / Integration,Priya Menon,Tier 2 API,4,FALSE,,7,,"api,pagination,bug"
+TKT-5018,2026-03-09 11:30,Sales team locked out after SSO migration,Apex Dynamics,Mid-Market,Critical,Resolved,Login / Auth,Priya Menon,Tier 2 API,1,FALSE,0.8,3,5,"sso,lockout,migration"
+TKT-5019,2026-03-10 09:30,QBR follow-up - roadmap confirmation,Acme Corp,Enterprise,Medium,Open,Account Management,Arjun Sharma,Onboarding,8,FALSE,,25,,"qbr,roadmap,q2"
+TKT-5020,2026-03-10 11:00,2FA not sending SMS codes,NovaSoft,Mid-Market,Critical,In Progress,Login / Auth,Priya Menon,Tier 2 API,1,FALSE,,4,,"2fa,sms,auth,critical"
+TKT-5021,2026-03-11 08:30,Performance degradation on large queries,DataStream Inc,Enterprise,High,In Progress,API / Integration,Priya Menon,Tier 2 API,4,FALSE,,9,,"api,performance,query"
+TKT-5022,2026-03-11 13:00,Reporting dashboard missing 48h of data,CoreLogic,Enterprise,High,Open,Data Export,Neha Iyer,Data Team,4,FALSE,,12,,"analytics,data-pipeline"
+TKT-5023,2026-03-12 09:30,Cannot revoke compromised OAuth token,PrimeLead Co,SMB,Critical,Resolved,Login / Auth,Priya Menon,Tier 2 API,1,FALSE,0.5,2,5,"security,oauth,token"
+TKT-5024,2026-03-12 14:00,IP allowlist for enterprise security policy,TechVault Ltd,Enterprise,Medium,Open,Account Management,Arjun Sharma,Onboarding,8,FALSE,,35,,"security,ip-allowlist"
+TKT-5025,2026-03-13 08:12,API rate limit errors - THIRD time this month,Acme Corp,Enterprise,Critical,Open,API / Integration,Priya Menon,Tier 2 API,1,FALSE,,2,,"api,rate-limit,escalation"`;
+
+const CLIENTS_CSV=`client_id,company_name,tier,industry,country,mrr_usd,health_score,nps,csat_avg,open_tickets,churn_risk,csm_name,active_users,total_seats,last_contact_date,arr_usd
+CLT-001,Acme Corp,Enterprise,SaaS / Tech,India,42000,34,6,3.8,5,High,Priya Menon,78,100,2026-03-10,504000
+CLT-002,GlobalTech,Enterprise,Manufacturing,Germany,38500,58,7,4.1,3,Medium,Anita Mishra,145,200,2026-03-12,462000
+CLT-003,NovaSoft,Mid-Market,HR Tech,India,12000,87,9,4.7,1,Low,Rohan Kapoor,42,50,2026-03-11,144000
+CLT-004,TechVault Ltd,Enterprise,Financial Services,Singapore,55000,72,8,4.3,3,Low,Neha Iyer,210,250,2026-03-09,660000
+CLT-005,DataStream Inc,Enterprise,Data Analytics,USA,61000,65,7,4.0,4,Medium,Priya Menon,310,350,2026-03-13,732000
+CLT-006,BlueSky Ltd,SMB,E-commerce,UK,3800,42,5,3.2,2,High,Anita Mishra,18,25,2026-03-07,45600
+CLT-007,CoreLogic,Enterprise,Insurance,Australia,47000,65,7,4.1,4,Medium,Rohan Kapoor,180,200,2026-03-08,564000
+CLT-008,Vertex Systems,Mid-Market,Logistics,UAE,15500,76,8,4.2,2,Low,Anita Mishra,68,80,2026-03-11,186000
+CLT-009,PrimeLead Co,SMB,Real Estate,India,4200,81,8,4.5,2,Low,Arjun Sharma,22,30,2026-03-10,50400
+CLT-010,Apex Dynamics,Mid-Market,Retail Tech,Canada,18000,69,7,4.0,3,Low,Rohan Kapoor,75,90,2026-03-12,216000`;
+
+const AGENTS_CSV=`agent_id,name,role,team,tickets_open,tickets_closed_mtd,avg_response_min,avg_resolution_hours,csat_avg,capacity_percent
+AGT-001,Arjun Sharma,CSM Lead,Onboarding,8,42,18,5.2,4.6,82
+AGT-002,Anita Mishra,Senior Support Engineer,Tier 2 API,5,38,14,3.8,4.4,74
+AGT-003,Priya Menon,API Specialist,Tier 2 API,6,51,6,1.9,4.8,91
+AGT-004,Neha Iyer,Data Engineer,Data Team,4,29,11,3.2,4.5,68
+AGT-005,Rohan Kapoor,Billing Specialist,Billing Team,3,35,10,2.4,4.7,60`;
+
+function parseCSV(txt){
+  const lines=txt.trim().split('\n');
+  const headers=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).map(line=>{
+    const vals=[];let cur='',inQ=false;
+    for(let i=0;i<line.length;i++){
+      if(line[i]==='"')inQ=!inQ;
+      else if(line[i]===','&&!inQ){vals.push(cur.trim());cur='';}
+      else cur+=line[i];
+    }
+    vals.push(cur.trim());
+    const obj={};
+    headers.forEach((h,i)=>{obj[h]=(vals[i]||'').replace(/^"|"$/g,'');});
+    return obj;
+  });
+}
+
+function loadSample(){
+  DB.tickets=parseCSV(TICKETS_CSV);
+  DB.clients=parseCSV(CLIENTS_CSV);
+  DB.agents=parseCSV(AGENTS_CSV);
+  afterLoad('Sample data loaded — 25 tickets · 10 clients · 5 agents');
+}
+
+// ════════════════════════════════════════════════
+// SENTIMENT SCORING ENGINE
+// ════════════════════════════════════════════════
+const SENT_CRITICAL=['blocking','production down','outage','critical','entire team','third time','frustrated','churn risk','escalation','lawsuit','immediate','urgent','broken','not working','403','500','503'];
+const SENT_NEGATIVE=['issue','error','failed','incorrect','wrong','missing','delayed','slow','not syncing','crash','locked out','denied','spike','degradation','compromised'];
+const SENT_CONCERNED=['question','help','clarify','confused','unsure','request','unexpected','not sure','wondering'];
+const SENT_POSITIVE=['upgrade','how to','follow-up','qbr','roadmap','confirmation','setup','onboarding'];
+
+function scoreSentiment(text){
+  if(!text)return 0.3;
+  const t=text.toLowerCase();
+  let score=0.25; // baseline neutral
+  let critHits=0,negHits=0,conHits=0,posHits=0;
+  SENT_CRITICAL.forEach(kw=>{if(t.includes(kw))critHits++;});
+  SENT_NEGATIVE.forEach(kw=>{if(t.includes(kw))negHits++;});
+  SENT_CONCERNED.forEach(kw=>{if(t.includes(kw))conHits++;});
+  SENT_POSITIVE.forEach(kw=>{if(t.includes(kw))posHits++;});
+  if(critHits>=2) score=0.95;
+  else if(critHits===1) score=0.9;
+  else if(negHits>=2) score=0.8;
+  else if(negHits===1) score=0.72;
+  else if(conHits>=1) score=0.5;
+  else if(posHits>=1) score=0.15;
+  // Boost if multiple categories overlap
+  if(critHits>=1&&negHits>=1) score=Math.min(1,score+0.05);
+  return Math.round(score*100)/100;
+}
+
+function sentimentLabel(score){
+  if(score>=0.86) return 'Escalate Now';
+  if(score>=0.7) return 'At Risk';
+  if(score>=0.4) return 'Monitor';
+  return 'Stable';
+}
+
+function scoreAllTickets(){
+  DB.tickets.forEach(t=>{
+    t.sentiment_score=scoreSentiment(t.subject);
+    t.sentiment_label=sentimentLabel(t.sentiment_score);
+  });
+}
+
+function afterLoad(msg){
+  scoreAllTickets();
+  populateFilters();
+  renderDashboard();renderTickets();renderClients();
+  renderSLA();renderAnalytics();renderRouting();renderWFStats();
+  renderApiEndpoints();renderMLPipeline();
+  updateSidebar();startTicker();
+  if(msg)toast('✅ '+msg,'ok');
+}
+
+// ════════════════════════════════════════════════
+// LIVE TICKER
+// ════════════════════════════════════════════════
+const TICKER_EVENTS=[
+  '⚡ TKT-5025 auto-routed → Tier 2 API · SLA: 1hr',
+  '🔥 Acme Corp health score dropped to 34 · churn risk HIGH',
+  '✅ TKT-5018 resolved by Priya Menon · CSAT: 5★',
+  '⇋ 8 routing rules evaluated · 7 matched · 0.3s avg',
+  '📧 SLA alert sent for TKT-5013 · 18 min remaining',
+  '🚨 Escalation triggered: TKT-5025 → Arjun Sharma',
+  '✅ TKT-5023 OAuth token revoked · resolved in 30min',
+  '⚡ AI triage classified 3 tickets as Critical · auto-routed',
+];
+
+function startTicker(){
+  const t=document.getElementById('demoTicker');
+  const s=document.getElementById('tickerScroll');
+  const items=[...TICKER_EVENTS,...TICKER_EVENTS].map(e=>`<span class="ticker-item"><span class="ticker-dot"></span>${e}</span>`).join('');
+  s.innerHTML=items;
+  t.classList.add('show');
+}
+
+// ════════════════════════════════════════════════
+// GUIDED TOUR
+// ════════════════════════════════════════════════
+const TOUR=[
+  {view:'dashboard',msg:'<strong>Dashboard</strong> — your command center. Live KPIs, sentiment alerts, critical tickets, and automation activity all in one glance.',nav:'nav-dashboard'},
+  {view:'tickets',msg:'<strong>Ticket Queue</strong> — 25 real tickets loaded from CSV. Filter by priority, client, agent, sentiment, or category. Export anytime.',nav:'nav-tickets'},
+  {view:'routing',msg:'<strong>Routing Rules Engine</strong> — 8 automation rules that route tickets in 0.3s instead of 4 minutes manually. Toggle rules on/off live.',nav:'nav-routing'},
+  {view:'workflows',msg:'<strong>Workflow Builder</strong> — visual automation chains. Trigger → Condition → Action. This escalation flow has run 847 times this month.',nav:'nav-workflows'},
+  {view:'triage',msg:'<strong>AI Triage</strong> — paste any ticket body and watch it auto-classify priority, category, sentiment, and suggest a routing path.',nav:'nav-triage'},
+  {view:'mlpipeline',msg:'<strong>ML Pipeline</strong> — real-time sentiment scoring engine. Every ticket gets a 0.0–1.0 score. See the escalation log, pipeline architecture, and integration readiness.',nav:'nav-mlpipeline'},
+  {view:'clients',msg:'<strong>Client Health</strong> — every account scored 0-100 with <strong>sentiment adjustments</strong>. Acme Corp drops further due to negative ticket sentiment.',nav:'nav-clients'},
+  {view:'analytics',msg:'<strong>Analytics</strong> — automation saved <strong>47 hours</strong> this month. Agent performance, CSAT/NPS trends, category breakdowns — all live from your CSV data.',nav:'nav-analytics'},
+  {view:'dashboard',msg:'<strong>Ops Assistant</strong> — click the 💬 button (bottom-right) to chat with AI about your dashboard data. Now includes sentiment queries.',nav:'nav-chat'},
+];
+let tourIdx=0;
+
+function startTour(){
+  const bar=document.getElementById('tour-bar');
+  bar.classList.add('show');
+  buildDots();
+  showTourStep(0);
+}
+
+function buildDots(){
+  document.getElementById('tour-dots').innerHTML=
+    TOUR.map((_,i)=>`<div class="tour-dot" id="tdot-${i}"></div>`).join('');
+}
+
+function showTourStep(i){
+  const step=TOUR[i];
+  document.getElementById('tour-step-lbl').textContent=`STEP ${i+1} OF ${TOUR.length}`;
+  document.getElementById('tour-msg').innerHTML=step.msg;
+  TOUR.forEach((_,j)=>{
+    const d=document.getElementById('tdot-'+j);
+    d.classList.remove('active','done');
+    if(j<i)d.classList.add('done');
+    else if(j===i)d.classList.add('active');
+  });
+  const btn=document.getElementById('tour-next-btn');
+  btn.textContent=i===TOUR.length-1?'Finish ✓':'Next →';
+  gotoView(step.view,document.getElementById(step.nav));
+}
+
+function nextTourStep(){
+  if(tourIdx<TOUR.length-1){tourIdx++;showTourStep(tourIdx);}
+  else endTour();
+}
+
+function endTour(){
+  document.getElementById('tour-bar').classList.remove('show');
+  toast('🎯 Tour complete — explore freely or import your own CSV','ok');
+}
+
+// ════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════
+function gotoView(name,el){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+  if(name==='triage')renderTriMetrics();
+}
+
+// ════════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════════
+function renderDashboard(){
+  if(!DB.tickets.length)return;
+  const hr=new Date().getHours();
+  const greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+  document.getElementById('d-greeting').textContent=greet+', Arjun 👋';
+  const t=DB.tickets;
+  const open=t.filter(x=>x.status!=='Resolved').length;
+  const res=t.filter(x=>x.status==='Resolved');
+  const avgResp=res.filter(x=>x.first_response_minutes).reduce((s,x)=>s+parseFloat(x.first_response_minutes||0),0)/Math.max(res.filter(x=>x.first_response_minutes).length,1);
+  const withC=res.filter(x=>x.csat_score);
+  const avgCsat=withC.length?(withC.reduce((s,x)=>s+parseFloat(x.csat_score),0)/withC.length).toFixed(1):0;
+  const breached=t.filter(x=>x.sla_breached==='TRUE').length;
+  const slaComp=((t.length-breached)/t.length*100).toFixed(1);
+  const crits=t.filter(x=>x.priority==='Critical'&&x.status!=='Resolved');
+
+  document.getElementById('d-sub').textContent=`${new Date().toDateString()} · ${open} open · ${crits.length} critical`;
+
+  const escNow=t.filter(x=>x.sentiment_label==='Escalate Now').length;
+  document.getElementById('d-stats').innerHTML=[
+    sCard('Open Tickets',open,'var(--b)','var(--b)',`${crits.length} critical need attention`),
+    sCard('Avg First Reply',Math.round(avgResp)+'m','var(--g)','var(--g)','↓ faster = better SLA'),
+    sCard('SLA Compliance',slaComp+'%',slaComp>95?'var(--ok)':'var(--w)',slaComp>95?'var(--ok)':'var(--w)',`${breached} breached · target 97%`),
+    sCard('Avg CSAT',avgCsat+'★','var(--o)','var(--o)',withC.length+' rated tickets'),
+    sCard('Sentiment Alerts',escNow,'var(--r)','var(--r)',`${escNow} ticket${escNow!==1?'s':''} need${escNow===1?'s':''} immediate attention`),
+  ].join('');
+
+  const critItems=crits.slice(0,4);
+  document.getElementById('d-crits').innerHTML=critItems.length?critItems.map((x,i)=>`
+    <div class="tl-item">
+      <div class="tl-dc"><div class="tl-dot" style="background:${i===0?'var(--r)':'var(--w)'}"></div>${i<critItems.length-1?'<div class="tl-line"></div>':''}</div>
+      <div style="flex:1"><div class="tl-ev"><strong>${x.ticket_id}</strong> · ${x.subject.slice(0,45)}${x.subject.length>45?'…':''}</div>
+      <div class="tl-who">⏰ ${x.priority} · ${x.client_name} · → ${x.assigned_agent_name}</div></div>
+    </div>`).join(''):'<div style="text-align:center;padding:20px;color:var(--ok);font-size:13px">✅ No critical tickets open</div>';
+
+  const autoRouted=t.filter(x=>x.assigned_team).length;
+  document.getElementById('d-auto').innerHTML=`
+    <div class="astat"><div>Tickets auto-routed</div><div class="astatv">${autoRouted}</div></div>
+    <div class="astat"><div>SLA escalations caught</div><div class="astatv" style="color:var(--b)">${Math.round(autoRouted*.06)}</div></div>
+    <div class="astat"><div>Hours saved (est.)</div><div class="astatv" style="color:var(--o)">${Math.round(autoRouted*4/60)}h</div></div>
+    <div class="astat"><div>Auto-responses sent</div><div class="astatv" style="color:var(--ok)">${Math.round(autoRouted*.65)}</div></div>
+  `;
+
+  const cats={};
+  t.forEach(x=>{cats[x.category]=(cats[x.category]||0)+1;});
+  const sc=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const mx=Math.max(...sc.map(x=>x[1]));
+  document.getElementById('d-chart').innerHTML=sc.map(([cat,cnt])=>`
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--t3)">${cnt}</div>
+      <div style="width:100%;height:${Math.round(cnt/mx*56)+6}px;background:linear-gradient(to top,rgba(59,158,255,.55),rgba(59,158,255,.1));border-radius:3px 3px 0 0;"></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:7px;color:var(--t3);text-align:center;max-width:54px;line-height:1.2">${cat.split('/')[0].trim()}</div>
+    </div>`).join('');
+
+  // Sentiment Heatmap by Client
+  const clientSent={};
+  t.forEach(x=>{
+    if(!x.client_name)return;
+    if(!clientSent[x.client_name])clientSent[x.client_name]={sum:0,cnt:0};
+    clientSent[x.client_name].sum+=(x.sentiment_score||0);
+    clientSent[x.client_name].cnt++;
+  });
+  const csList=Object.entries(clientSent).map(([name,d])=>({name,avg:d.sum/d.cnt})).sort((a,b)=>b.avg-a.avg);
+  document.getElementById('d-sent-heatmap').innerHTML=csList.map(c=>{
+    const col=c.avg>=0.86?'var(--r)':c.avg>=0.7?'var(--w)':c.avg>=0.4?'var(--b)':'var(--ok)';
+    const lbl=sentimentLabel(c.avg);
+    return `<div class="hrow"><div class="hname">${c.name}</div><div class="htrack"><div class="hfill" style="width:${Math.round(c.avg*100)}%;background:${col}"></div></div><div class="hscore" style="color:${col}">${c.avg.toFixed(2)}</div><span class="badge" style="font-size:8px;padding:1px 5px;margin-left:6px;background:${col}15;color:${col};border:1px solid ${col}30">${lbl}</span></div>`;
+  }).join('');
+}
+
+function sCard(lbl,val,vc,sc,sub){
+  return `<div class="card"><div class="stat-lbl">${lbl}</div><div class="stat-val" style="color:${vc}">${val}</div><div style="font-size:11px;color:var(--t2)">${sub}</div></div>`;
+}
+
+// ════════════════════════════════════════════════
+// TICKETS
+// ════════════════════════════════════════════════
+function getFiltered(){
+  const fp=document.getElementById('fP').value;
+  const fs=document.getElementById('fS').value;
+  const fc=document.getElementById('fC').value;
+  const fcat=document.getElementById('fCat').value;
+  const fa=document.getElementById('fA').value;
+  const fse=document.getElementById('fSent').value;
+  const qs=document.getElementById('gSearch').value.toLowerCase();
+  return DB.tickets.filter(t=>
+    (!fp||t.priority===fp)&&(!fs||t.status===fs)&&(!fc||t.client_name===fc)&&
+    (!fcat||t.category===fcat)&&(!fa||t.assigned_agent_name===fa)&&
+    (!fse||t.sentiment_label===fse)&&
+    (!qs||JSON.stringify(t).toLowerCase().includes(qs)));
+}
+
+function renderTickets(){
+  if(!DB.tickets.length){document.getElementById('tBody').innerHTML='<tr><td colspan="11" style="text-align:center;padding:30px;color:var(--t3)">No data — load sample or import CSV</td></tr>';return;}
+  const fil=getFiltered();
+  const pg=fil.slice(tPage*PAGE,(tPage+1)*PAGE);
+  document.getElementById('t-sub').textContent=`${fil.length} tickets · ${DB.tickets.filter(t=>t.status!=='Resolved').length} open`;
+  document.getElementById('t-count').textContent=`${fil.length} tickets`;
+  document.getElementById('t-page').textContent=`Page ${tPage+1} / ${Math.max(1,Math.ceil(fil.length/PAGE))}`;
+  const AC=['#9333ea','#0098ff','#10b981','#f59e0b','#e11d48'];
+  const sentCls={'Stable':'bs-stable','Monitor':'bs-monitor','At Risk':'bs-atrisk','Escalate Now':'bs-escalate'};
+  document.getElementById('tBody').innerHTML=pg.map(t=>{
+    const ai=DB.agents.findIndex(a=>a.name===t.assigned_agent_name);
+    const ac=AC[ai>=0?ai:0];
+    const ini=t.assigned_agent_name?t.assigned_agent_name.split(' ').map(w=>w[0]).join('').slice(0,2):'–';
+    const pb={'Critical':'bc','High':'bh','Medium':'bm','Low':'bl'};
+    const sb={'Open':'bop','In Progress':'bpr','Resolved':'brs'};
+    const sl=t.sentiment_label||'Stable';
+    return `<tr>
+      <td><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3)">${t.ticket_id}</span></td>
+      <td style="max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${t.subject}">${t.subject}</td>
+      <td><span style="font-size:11px;color:var(--t2)">${t.client_name||'—'}</span></td>
+      <td><span class="badge be" style="${t.client_tier==='Enterprise'?'':'background:rgba(59,158,255,.08);color:#60a5fa;border-color:rgba(59,158,255,.2)'}">${t.client_tier||'—'}</span></td>
+      <td><span class="badge ${pb[t.priority]||'bl'}"><span class="dot"></span>${t.priority||'—'}</span></td>
+      <td><span class="badge ${sb[t.status]||'bop'}">${t.status||'—'}</span></td>
+      <td><span class="badge ${sentCls[sl]||'bs-stable'}">${sl==='Escalate Now'?'<span class="dot"></span>':''}${sl}</span></td>
+      <td><div class="achip"><div class="aav" style="background:${ac}20;color:${ac};border:1px solid ${ac}40">${ini}</div><span style="font-size:11px;color:var(--t2)">${t.assigned_agent_name||'—'}</span></div></td>
+      <td><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:${t.sla_breached==='TRUE'?'var(--r)':'var(--t3)'}">${t.sla_hours?t.sla_hours+'h':'—'}</span></td>
+      <td><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${parseFloat(t.csat_score)>=4?'var(--ok)':parseFloat(t.csat_score)>=3?'var(--w)':t.csat_score?'var(--r)':'var(--t3)'}">${t.csat_score?t.csat_score+'★':'—'}</span></td>
+      <td><span class="tag">${t.category||'—'}</span></td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="11" style="text-align:center;padding:30px;color:var(--t3)">No tickets match filters</td></tr>';
+}
+
+function prevPage(){if(tPage>0){tPage--;renderTickets();}}
+function nextPage(){const f=getFiltered();if((tPage+1)*PAGE<f.length){tPage++;renderTickets();}}
+function doSearch(){
+  tPage=0;
+  renderTickets();
+  const qs=document.getElementById('gSearch').value.trim();
+  if(qs.length>1){
+    gotoView('tickets',document.getElementById('nav-tickets'));
+  }
+}
+
+function populateFilters(){
+  const clients=[...new Set(DB.tickets.map(t=>t.client_name).filter(Boolean))].sort();
+  const cats=[...new Set(DB.tickets.map(t=>t.category).filter(Boolean))].sort();
+  const agents=[...new Set(DB.tickets.map(t=>t.assigned_agent_name).filter(Boolean))].sort();
+  document.getElementById('fC').innerHTML='<option value="">All Clients</option>'+clients.map(c=>`<option>${c}</option>`).join('');
+  document.getElementById('fCat').innerHTML='<option value="">All Categories</option>'+cats.map(c=>`<option>${c}</option>`).join('');
+  document.getElementById('fA').innerHTML='<option value="">All Agents</option>'+agents.map(a=>`<option>${a}</option>`).join('');
+  document.getElementById('m-client').innerHTML=clients.map(c=>`<option>${c}</option>`).join('');
+}
+
+// ════════════════════════════════════════════════
+// CLIENTS
+// ════════════════════════════════════════════════
+function getClientSentAdj(clientName){
+  const tix=DB.tickets.filter(t=>t.client_name===clientName);
+  if(!tix.length) return {adj:0,avg:0,label:'—'};
+  const avg=tix.reduce((s,t)=>s+(t.sentiment_score||0),0)/tix.length;
+  let adj=0;
+  if(avg>=0.86) adj=-20;
+  else if(avg>=0.7) adj=-10;
+  else if(avg<0.4) adj=5;
+  return {adj,avg,label:adj>0?'+'+adj+' pts':adj<0?adj+' pts':'0 pts'};
+}
+
+function getAdjustedHealth(c){
+  const base=parseFloat(c.health_score)||0;
+  const sa=getClientSentAdj(c.company_name);
+  const adjusted=Math.max(0,Math.min(100,Math.round(base*0.7+(base+sa.adj)*0.3)));
+  return {score:adjusted,sentAdj:sa};
+}
+
+function renderClients(){
+  if(!DB.clients.length)return;
+  document.getElementById('c-sub').textContent=`${DB.clients.length} accounts · ${DB.clients.filter(c=>c.churn_risk==='High').length} high risk`;
+  const withAdj=DB.clients.map(c=>{const ah=getAdjustedHealth(c);return {...c,adj_health:ah.score,sentAdj:ah.sentAdj};});
+  const sorted=[...withAdj].sort((a,b)=>a.adj_health-b.adj_health);
+  const atRisk=sorted.filter(c=>c.adj_health<50);
+  const mon=sorted.filter(c=>c.adj_health>=50&&c.adj_health<70);
+  const healthy=sorted.filter(c=>c.adj_health>=70).slice(-1);
+  const mkCard=(c,lbl)=>{
+    const s=c.adj_health;
+    const col=s<50?'var(--r)':s<70?'var(--w)':'var(--ok)';
+    const bc=s<50?'rgba(239,68,68,.25)':s<70?'rgba(245,158,11,.25)':'rgba(16,185,129,.18)';
+    const adjCol=c.sentAdj.adj>0?'var(--ok)':c.sentAdj.adj<0?'var(--r)':'var(--t3)';
+    return `<div class="card" style="border-color:${bc}">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="stat-lbl" style="margin:0">${lbl}</div>
+        <span class="badge ${c.churn_risk==='High'?'bc':c.churn_risk==='Medium'?'bm':'bl'}">${c.churn_risk} Risk</span>
+      </div>
+      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:19px;color:${col};margin-bottom:4px">${c.company_name}</div>
+      <div style="font-size:11px;color:var(--t2);margin-bottom:6px">Score: <strong style="color:${col}">${s}</strong>/100 · ${c.tier}</div>
+      <div class="pb"><div class="pf" style="width:${s}%;background:${col}"></div></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:${adjCol};margin-top:6px">Sentiment adjustment: ${c.sentAdj.label}</div>
+      <div style="margin-top:6px;font-size:11px;color:var(--t2)">MRR: $${Number(c.mrr_usd||0).toLocaleString()} · NPS: ${c.nps||'—'}</div>
+      <div style="font-size:10px;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-top:4px">CSM: ${c.csm_name||'—'} · Last: ${c.last_contact_date||'—'}</div>
+    </div>`;
+  };
+  document.getElementById('c-risk-cards').innerHTML=
+    (atRisk[0]?mkCard(atRisk[0],'⚠ AT RISK'):'')+
+    (mon[0]?mkCard(mon[0],'👁 MONITOR'):'')+
+    (healthy[0]?mkCard(healthy[0],'✅ HEALTHY'):'');
+  const all=[...withAdj].sort((a,b)=>b.adj_health-a.adj_health);
+  document.getElementById('c-all').innerHTML=all.map(c=>{
+    const s=c.adj_health;
+    const col=s<50?'var(--r)':s<70?'var(--w)':s<80?'var(--b)':'var(--ok)';
+    const adjCol=c.sentAdj.adj>0?'var(--ok)':c.sentAdj.adj<0?'var(--r)':'var(--t3)';
+    return `<div class="hrow"><div class="hname">${c.company_name}</div><div class="htrack"><div class="hfill" style="width:${s}%;background:${col}"></div></div><div class="hscore" style="color:${col}">${s}</div><span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:${adjCol};margin-left:6px;min-width:40px">${c.sentAdj.label}</span></div>`;
+  }).join('');
+  document.getElementById('n-risk').textContent=withAdj.filter(c=>c.adj_health<50).length;
+}
+
+// ════════════════════════════════════════════════
+// ROUTING
+// ════════════════════════════════════════════════
+const RULES=[
+  {on:true,cond:'<strong>Priority</strong> = CRITICAL',act:'Route → Tier 2 · Notify CSM Lead'},
+  {on:true,cond:'<strong>Category</strong> = Billing',act:'Route → Billing Team'},
+  {on:true,cond:'<strong>Keyword</strong> contains "API" OR "integration"',act:'Route → API Support'},
+  {on:true,cond:'<strong>Client Tier</strong> = Enterprise AND <strong>SLA</strong> &lt; 2hr',act:'Auto-escalate → Manager'},
+  {on:true,cond:'<strong>No reply</strong> from agent &gt; 30 min',act:'Re-notify + Flag'},
+  {on:false,cond:'<strong>Status</strong> = Open AND <strong>Age</strong> &gt; 24hr',act:'Send client reminder'},
+  {on:true,cond:'<strong>Sentiment</strong> = Very Negative',act:'Flag for CSM + Priority boost'},
+  {on:true,cond:'<strong>Category</strong> = Onboarding',act:'Route → Onboarding Specialist'},
+];
+
+function renderRouting(){
+  document.getElementById('rules-wrap').innerHTML=RULES.map((r,i)=>`
+    <div class="rule ${r.on?'on':''}" id="rule-${i}">
+      <div class="tog ${r.on?'on':''}" onclick="toggleRule(${i})"></div>
+      <div class="rule-cond" id="rule-cond-${i}">${r.cond}</div>
+      <span style="color:var(--t3);padding:0 8px">→</span>
+      <div class="rule-act" id="rule-act-${i}">${r.act}</div>
+      <button class="btn btn-ghost" style="padding:3px 9px;font-size:10px;margin-left:auto" onclick="editRule(${i})">Edit</button>
+      <button class="btn btn-ghost" style="padding:3px 9px;font-size:10px;color:var(--r)" onclick="deleteRule(${i})">✕</button>
+    </div>`).join('');
+  document.getElementById('r-fired').textContent=DB.tickets.filter(t=>t.assigned_team).length;
+}
+
+function toggleRule(i){RULES[i].on=!RULES[i].on;renderRouting();toast(RULES[i].on?'✅ Rule enabled':'⏸ Rule disabled','ok');}
+function addRule(){RULES.push({on:true,cond:'<strong>New Condition</strong> — click Edit to configure',act:'Action → TBD'});renderRouting();toast('✅ Rule added — click Edit to configure','ok');}
+
+function editRule(i){
+  const r=RULES[i];
+  // Strip HTML tags for editing
+  const condText=r.cond.replace(/<\/?strong>/g,'');
+  const actText=r.act;
+
+  const condEl=document.getElementById('rule-cond-'+i);
+  const actEl=document.getElementById('rule-act-'+i);
+  const ruleEl=document.getElementById('rule-'+i);
+
+  // Check if already editing
+  if(ruleEl.dataset.editing==='true') return;
+  ruleEl.dataset.editing='true';
+
+  condEl.innerHTML=`<input class="finput" style="font-size:10px;padding:4px 7px;font-family:'JetBrains Mono',monospace;" value="${condText}" id="rule-edit-cond-${i}">`;
+  actEl.innerHTML=`<input class="finput" style="font-size:10px;padding:4px 7px;font-family:'JetBrains Mono',monospace;width:140px;" value="${actText}" id="rule-edit-act-${i}">`;
+
+  // Replace Edit btn with Save btn
+  const btns=ruleEl.querySelectorAll('.btn');
+  btns[0].textContent='Save';
+  btns[0].onclick=function(){
+    const newCond=document.getElementById('rule-edit-cond-'+i).value;
+    const newAct=document.getElementById('rule-edit-act-'+i).value;
+    // Wrap first word in bold
+    const parts=newCond.split(' ');
+    RULES[i].cond='<strong>'+parts[0]+'</strong> '+parts.slice(1).join(' ');
+    RULES[i].act=newAct;
+    renderRouting();
+    toast('✅ Rule '+( i+1)+' updated','ok');
+  };
+}
+
+function deleteRule(i){
+  if(RULES.length<=1){toast('⚠ Cannot delete last rule','warn');return;}
+  RULES.splice(i,1);
+  renderRouting();
+  toast('🗑 Rule deleted','ok');
+}
+
+// ════════════════════════════════════════════════
+// WORKFLOWS
+// ════════════════════════════════════════════════
+const WORKFLOWS=[
+  {
+    name:'Escalation Flow',type:'ESCALATION',active:true,lastRun:'2 mins ago',
+    nodes:[
+      {icon:'⚡',tp:'Trigger',lb:'Ticket Created',cls:'tr'},
+      {icon:'⊕',tp:'Condition',lb:'Priority = Critical?',cls:'co'},
+      {icon:'⇋',tp:'Action',lb:'Route to Tier 2',cls:'ac'},
+      {icon:'📧',tp:'Action',lb:'Notify CSM Lead',cls:'ac'},
+      {icon:'⏱',tp:'Condition',lb:'No reply 15m?',cls:'co'},
+      {icon:'🚨',tp:'Action',lb:'Escalate Manager',cls:'es'},
+    ]
+  },
+  {
+    name:'SLA Breach Alert',type:'SLA MONITORING',active:true,lastRun:'8 mins ago',
+    nodes:[
+      {icon:'⏱',tp:'Trigger',lb:'SLA 80% elapsed',cls:'tr'},
+      {icon:'⊕',tp:'Condition',lb:'Priority ≥ High?',cls:'co'},
+      {icon:'📧',tp:'Action',lb:'Alert assigned agent',cls:'ac'},
+      {icon:'⊕',tp:'Condition',lb:'SLA 95% elapsed?',cls:'co'},
+      {icon:'🚨',tp:'Action',lb:'Escalate to Lead',cls:'es'},
+      {icon:'📊',tp:'Action',lb:'Log SLA event',cls:'ac'},
+    ]
+  },
+  {
+    name:'Onboarding Track',type:'ONBOARDING',active:true,lastRun:'1 hr ago',
+    nodes:[
+      {icon:'⚡',tp:'Trigger',lb:'New client added',cls:'tr'},
+      {icon:'⇋',tp:'Action',lb:'Assign CSM',cls:'ac'},
+      {icon:'📧',tp:'Action',lb:'Send welcome email',cls:'ac'},
+      {icon:'⏱',tp:'Condition',lb:'Day 3: Setup done?',cls:'co'},
+      {icon:'📧',tp:'Action',lb:'Schedule kickoff',cls:'ac'},
+      {icon:'⊕',tp:'Condition',lb:'Day 14: Active?',cls:'co'},
+      {icon:'🚨',tp:'Action',lb:'Flag for follow-up',cls:'es'},
+    ]
+  }
+];
+let activeWfIdx=0;
+
+function switchWfTab(idx,el){
+  activeWfIdx=idx;
+  document.querySelectorAll('#wf-tabbar .tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  renderWorkflowNodes();
+  document.getElementById('wf-sim-result').style.display='none';
+}
+
+function renderWorkflowNodes(){
+  const wf=WORKFLOWS[activeWfIdx];
+  document.getElementById('wf-header').innerHTML=
+    'WORKFLOW · '+wf.type+' · <span style="color:var(--ok)">● '+(wf.active?'Active':'Paused')+'</span> · Last run: '+wf.lastRun;
+  document.getElementById('wf-nodes-area').innerHTML=wf.nodes.map((n,i)=>
+    '<div class="wf-node '+n.cls+'"><div class="wf-icon">'+n.icon+'</div><div class="wf-tp">'+n.tp+'</div><div class="wf-lb">'+n.lb+'</div></div>'+
+    (i<wf.nodes.length-1?'<div class="wf-arr">→</div>':'')
+  ).join('');
+}
+
+function simulateWorkflow(){
+  const wf=WORKFLOWS[activeWfIdx];
+  const t=DB.tickets;
+  let matched=0, actions=[];
+
+  if(activeWfIdx===0){ // Escalation
+    const crits=t.filter(x=>x.priority==='Critical'&&x.status!=='Resolved');
+    matched=crits.length;
+    actions=crits.map(x=>x.ticket_id+' → Tier 2 → Notify CSM → '+(Math.random()>0.5?'Escalate Manager':'Resolved in time'));
+  } else if(activeWfIdx===1){ // SLA Breach
+    const atRisk=t.filter(x=>x.sla_breached==='TRUE'||(x.priority==='Critical'&&x.status!=='Resolved'));
+    matched=atRisk.length;
+    actions=atRisk.map(x=>x.ticket_id+' → Alert '+x.assigned_agent_name+' → '+(x.sla_breached==='TRUE'?'BREACHED — escalated':'SLA holding'));
+  } else { // Onboarding
+    const cl=DB.clients;
+    matched=cl.length;
+    actions=cl.slice(0,5).map(c=>c.company_name+' → Assign '+c.csm_name+' → Welcome sent → '+(parseFloat(c.health_score)>60?'Active ✓':'Flag for follow-up'));
+  }
+
+  const el=document.getElementById('wf-sim-result');
+  el.style.display='block';
+  el.innerHTML='<div class="sec">▶ Simulation Result — '+wf.name+'</div>'+
+    '<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--t2);margin-bottom:10px">'+matched+' items matched · '+wf.nodes.length+' steps evaluated</div>'+
+    actions.slice(0,6).map(a=>'<div style="padding:6px 0;border-bottom:1px solid var(--b1);font-size:11px;color:var(--t2)">'+a+'</div>').join('')+
+    (actions.length>6?'<div style="padding:6px 0;font-size:10px;color:var(--t3)">+'+(actions.length-6)+' more…</div>':'');
+  toast('▶ Simulated '+wf.name+' — '+matched+' matched','ok');
+}
+
+function saveWorkflow(){
+  toast('✅ '+WORKFLOWS[activeWfIdx].name+' saved successfully','ok');
+}
+
+function renderWFStats(){
+  const t=DB.tickets;
+  const ar=t.filter(x=>x.assigned_team).length;
+  document.getElementById('wf-runs').textContent=t.length*2;
+  document.getElementById('wf-time').textContent=Math.round(ar*4/60)+'h';
+  document.getElementById('wf-esc').textContent=Math.round(ar*.06);
+  renderWorkflowNodes();
+}
+
+// ════════════════════════════════════════════════
+// AI TRIAGE
+// ════════════════════════════════════════════════
+const TRI_RULES=[
+  {kw:['api','rate limit','429','webhook','integration','endpoint'],pri:'Critical',cat:'API / Integration',route:'Tier 2 API Team',sla:'1hr',sent:90},
+  {kw:['billing','invoice','charge','payment','refund','duplicate'],pri:'High',cat:'Billing',route:'Billing Team',sla:'4hr',sent:70},
+  {kw:['sso','saml','oauth','login','auth','locked out','2fa'],pri:'Critical',cat:'Login / Auth',route:'Security Specialist',sla:'1hr',sent:85},
+  {kw:['down','outage','503','not working','broken'],pri:'Critical',cat:'Outage',route:'Tier 2 API + CSM Lead',sla:'30min',sent:95},
+  {kw:['onboarding','setup','new user','permission'],pri:'Medium',cat:'Onboarding',route:'Onboarding Specialist',sla:'8hr',sent:50},
+  {kw:['export','csv','data','sync','pipeline'],pri:'High',cat:'Data Export',route:'Data Team',sla:'4hr',sent:65},
+  {kw:['mobile','ios','android','crash'],pri:'Medium',cat:'Mobile',route:'Tier 2 API',sla:'8hr',sent:60},
+];
+
+function runTriage(){
+  const txt=document.getElementById('triIn').value.toLowerCase();
+  if(txt.length<8){document.getElementById('triResult').style.display='none';return;}
+  document.getElementById('triResult').style.display='block';
+  let match=TRI_RULES[TRI_RULES.length-1]||{pri:'Medium',cat:'General',route:'Support Team',sla:'8hr',sent:50};
+  for(const r of TRI_RULES){if(r.kw.some(k=>txt.includes(k))){match=r;break;}}
+  const urg=['urgent','immediately','critical','blocking','production','entire team'].some(w=>txt.includes(w));
+  const ss=Math.min(100,match.sent+(urg?15:0));
+  const slbl=ss>85?'CRITICAL':ss>65?'URGENT':ss>45?'CONCERNED':'NEUTRAL';
+  const scol=ss>85?'var(--r)':ss>65?'var(--w)':'var(--b)';
+  document.getElementById('triTags').innerHTML=`
+    <span class="tag tb">📂 ${match.cat}</span>
+    <span class="tag tg">🔴 ${urg?'Critical':match.pri}</span>
+    ${urg?'<span class="tag tg">⚡ Production Impact</span>':''}
+    <span class="tag">🕐 SLA: ${match.sla}</span>`;
+  document.getElementById('triSDot').style.left=ss+'%';
+  document.getElementById('triSDot').style.borderColor=scol;
+  document.getElementById('triSLbl').textContent=slbl;
+  document.getElementById('triSLbl').style.color=scol;
+  document.getElementById('triRoute').textContent=`→ ${match.route} · SLA: ${match.sla}`;
+  window._tm=match;
+}
+
+function renderTriMetrics(){
+  const metrics=[{l:'Classification accuracy',v:94.2,c:'var(--g)'},{l:'Routing precision',v:91.7,c:'var(--b)'},{l:'Sentiment detection',v:88.9,c:'var(--w)'},{l:'Priority prediction',v:96.1,c:'var(--ok)'}];
+  document.getElementById('triMetrics').innerHTML=metrics.map(m=>`<div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px;"><div>${m.l}</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${m.c}">${m.v}%</div></div><div class="pb" style="height:4px;"><div class="pf" style="width:${m.v}%;background:${m.c}"></div></div></div>`).join('');
+  if(!DB.tickets.length){document.getElementById('triTops').innerHTML='<span style="color:var(--t3);font-size:11px">Load data to see tags</span>';return;}
+  const tc={};
+  DB.tickets.forEach(t=>{(t.tags||'').split(',').forEach(tag=>{const k=tag.trim();if(k)tc[k]=(tc[k]||0)+1;});});
+  const top=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  document.getElementById('triTops').innerHTML=top.map(([tag,cnt])=>`<span class="tag ${cnt>4?'tg':'tb'}">${tag} (${cnt})</span>`).join(' ');
+}
+
+function applyTriage(){
+  if(window._tm){document.getElementById('m-cat').value=window._tm.cat;document.getElementById('m-pri').value=window._tm.pri;updRoute();}
+  openCreate();
+}
+
+// ════════════════════════════════════════════════
+// SLA
+// ════════════════════════════════════════════════
+function renderSLA(){
+  if(!DB.tickets.length)return;
+  const t=DB.tickets;
+  const br=t.filter(x=>x.sla_breached==='TRUE').length;
+  const comp=((t.length-br)/t.length*100).toFixed(1);
+  const res=t.filter(x=>x.resolution_time_hours);
+  const avgR=(res.reduce((s,x)=>s+parseFloat(x.resolution_time_hours||0),0)/Math.max(res.length,1)).toFixed(1);
+  const critO=t.filter(x=>x.priority==='Critical'&&x.status!=='Resolved').length;
+  document.getElementById('sla-ov').textContent=comp+'%';
+  document.getElementById('sla-br').textContent=`${br} breached · target 97%`;
+  document.getElementById('sla-risk').textContent=critO;
+  document.getElementById('sla-avgr').textContent=avgR+'h';
+  document.getElementById('sla-avgrsub').textContent=`${res.length} resolved tickets`;
+  document.getElementById('sla-sub').textContent=`${t.length} tickets · ${comp}% compliance`;
+  const pris=['Critical','High','Medium','Low'];
+  const cols=['var(--r)','var(--w)','var(--b)','var(--ok)'];
+  const slah=[1,4,8,24];
+  document.getElementById('sla-rings').innerHTML=pris.map((p,i)=>{
+    const pt=t.filter(x=>x.priority===p);
+    const pb=pt.filter(x=>x.sla_breached==='TRUE').length;
+    const pc=pt.length?Math.round((pt.length-pb)/pt.length*100):100;
+    const r=34,ci=2*Math.PI*r,da=ci*(pc/100);
+    return `<div class="ring-wrap"><div class="ring">
+      <svg width="76" height="76" viewBox="0 0 76 76">
+        <circle cx="38" cy="38" r="${r}" fill="none" stroke="var(--b1)" stroke-width="5"/>
+        <circle cx="38" cy="38" r="${r}" fill="none" stroke="${cols[i]}" stroke-width="5" stroke-dasharray="${ci}" stroke-dashoffset="${ci-da}" stroke-linecap="round"/>
+      </svg>
+      <div class="ring-in"><div class="ring-pct" style="color:${cols[i]}">${pc}%</div><div class="ring-nm">${p.toUpperCase()}</div></div>
+    </div><div style="font-size:10px;color:var(--t2);margin-top:5px">${slah[i]}hr · ${pt.length} tickets</div></div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// ANALYTICS
+// ════════════════════════════════════════════════
+function renderAnalytics(){
+  if(!DB.tickets.length&&!DB.clients.length)return;
+  const t=DB.tickets;const c=DB.clients;const a=DB.agents;
+  const wc=t.filter(x=>x.csat_score);
+  const avgC=wc.length?(wc.reduce((s,x)=>s+parseFloat(x.csat_score),0)/wc.length).toFixed(2):0;
+  const avgN=c.length?(c.reduce((s,x)=>s+parseFloat(x.nps||0),0)/c.length).toFixed(0):0;
+  const totalMRR=c.reduce((s,x)=>s+parseFloat(x.mrr_usd||0),0);
+  const hr=c.filter(x=>x.churn_risk==='High').length;
+  document.getElementById('an-sub').textContent=`${t.length} tickets · ${c.length} clients · March 2026`;
+  document.getElementById('an-kpi').innerHTML=[
+    sCard('Avg CSAT',avgC+'★','var(--g)','var(--g)',wc.length+' rated'),
+    sCard('Avg NPS','+'+avgN,'var(--b)','var(--b)',c.length+' clients'),
+    sCard('Total MRR','$'+Math.round(totalMRR/1000)+'k','var(--ok)','var(--ok)','all accounts'),
+    sCard('High Churn Risk',hr,hr>0?'var(--r)':'var(--ok)',hr>0?'var(--r)':'var(--ok)','accounts at risk'),
+  ].join('');
+  const ar=t.filter(x=>x.assigned_team).length;
+  const ts=Math.round(ar*4/60);
+  document.getElementById('an-time').innerHTML=`
+    <div class="astat"><div>Auto-routing</div><div class="astatv">${Math.round(ts*.5)}h</div></div>
+    <div class="astat"><div>Auto-responses</div><div class="astatv" style="color:var(--b)">${Math.round(ts*.3)}h</div></div>
+    <div class="astat"><div>SLA monitoring</div><div class="astatv" style="color:var(--o)">${Math.round(ts*.13)}h</div></div>
+    <div class="astat"><div>Deduplication</div><div class="astatv" style="color:var(--w)">${Math.round(ts*.07)}h</div></div>
+    <div style="margin-top:12px;background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.15);border-radius:7px;padding:12px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t2)">TOTAL SAVED</span>
+      <span style="font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;color:var(--g)">${ts}h</span>
+    </div>`;
+  const cats={};
+  t.forEach(x=>{cats[x.category]=(cats[x.category]||0)+1;});
+  const sc=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  document.getElementById('an-cats').innerHTML=sc.map(([cat,cnt])=>`
+    <div class="hrow"><div class="hname" style="font-size:11px">${cat}</div>
+    <div class="htrack"><div class="hfill" style="width:${Math.round(cnt/t.length*100)}%;background:var(--b)"></div></div>
+    <div class="hscore" style="color:var(--b);font-size:11px">${Math.round(cnt/t.length*100)}%</div></div>`).join('');
+  if(a.length){
+    document.getElementById('an-agents').innerHTML=`<table><thead><tr><th>Agent</th><th>Team</th><th>Open</th><th>Closed MTD</th><th>Avg Reply</th><th>Avg Res.</th><th>CSAT</th><th>Capacity</th></tr></thead><tbody>
+      ${a.map(ag=>`<tr>
+        <td><strong>${ag.name}</strong><div style="font-size:10px;color:var(--t3)">${ag.role||''}</div></td>
+        <td style="font-size:11px;color:var(--t2)">${ag.team||'—'}</td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--w)">${ag.tickets_open||0}</td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ok)">${ag.tickets_closed_mtd||0}</td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${ag.avg_response_min||'—'}m</td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${ag.avg_resolution_hours||'—'}h</td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${parseFloat(ag.csat_avg)>=4.5?'var(--ok)':'var(--w)'}">${ag.csat_avg||'—'}★</td>
+        <td><div style="display:flex;align-items:center;gap:5px;"><div class="htrack" style="width:55px;"><div class="hfill" style="width:${ag.capacity_percent||0}%;background:${parseFloat(ag.capacity_percent)>85?'var(--r)':parseFloat(ag.capacity_percent)>70?'var(--w)':'var(--ok)'}"></div></div><span style="font-family:'JetBrains Mono',monospace;font-size:10px">${ag.capacity_percent||0}%</span></div></td>
+      </tr>`).join('')}
+    </tbody></table>`;
+  }
+}
+
+// ════════════════════════════════════════════════
+// ML PIPELINE
+// ════════════════════════════════════════════════
+function renderMLPipeline(){
+  if(!DB.tickets.length)return;
+  const t=DB.tickets;
+  const counts={Stable:0,Monitor:0,'At Risk':0,'Escalate Now':0};
+  t.forEach(x=>{counts[x.sentiment_label]=(counts[x.sentiment_label]||0)+1;});
+  const avgSent=(t.reduce((s,x)=>s+(x.sentiment_score||0),0)/t.length).toFixed(2);
+
+  // Worst client by avg sentiment
+  const cSent={};
+  t.forEach(x=>{
+    if(!x.client_name)return;
+    if(!cSent[x.client_name])cSent[x.client_name]={sum:0,cnt:0};
+    cSent[x.client_name].sum+=(x.sentiment_score||0);
+    cSent[x.client_name].cnt++;
+  });
+  const worst=Object.entries(cSent).map(([n,d])=>({n,avg:d.sum/d.cnt})).sort((a,b)=>b.avg-a.avg);
+  const worstClient=worst[0]?worst[0].n+' ('+worst[0].avg.toFixed(2)+')':'—';
+
+  // Sentiment-Priority alignment
+  const critTix=t.filter(x=>x.priority==='Critical');
+  const critEsc=critTix.filter(x=>x.sentiment_label==='Escalate Now').length;
+  const alignment=critTix.length?(critEsc/critTix.length*100).toFixed(1):0;
+
+  document.getElementById('ml-stats').innerHTML=`
+    <div class="astat"><div>Total tickets scored</div><div class="astatv">${t.length}</div></div>
+    <div class="astat"><div>Average sentiment score</div><div class="astatv" style="color:${parseFloat(avgSent)>=0.7?'var(--r)':parseFloat(avgSent)>=0.4?'var(--w)':'var(--ok)'}">${avgSent}</div></div>
+    <div class="astat"><div>Worst client sentiment</div><div class="astatv" style="color:var(--r);font-size:14px">${worstClient}</div></div>
+    <div class="astat"><div>Sentiment-Priority alignment</div><div class="astatv" style="color:var(--b)">${alignment}%</div></div>
+  `;
+
+  const distColors={'Stable':'var(--ok)','Monitor':'var(--b)','At Risk':'var(--w)','Escalate Now':'var(--r)'};
+  document.getElementById('ml-dist').innerHTML=Object.entries(counts).map(([label,cnt])=>{
+    const pct=t.length?Math.round(cnt/t.length*100):0;
+    return `<div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px;"><div>${label}</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${distColors[label]}">${cnt} (${pct}%)</div></div><div class="pb" style="height:5px;"><div class="pf" style="width:${pct}%;background:${distColors[label]}"></div></div></div>`;
+  }).join('');
+
+  // Escalation Log
+  const escalTix=t.filter(x=>x.sentiment_label==='Escalate Now'||x.sentiment_label==='At Risk');
+  document.getElementById('ml-esc-body').innerHTML=escalTix.length?escalTix.map(x=>{
+    const client=DB.clients.find(c=>c.company_name===x.client_name);
+    const churnHigh=client&&client.churn_risk==='High';
+    let action='Monitor — review in next daily standup';
+    if((x.sentiment_score||0)>0.86&&x.priority==='Critical') action='Immediate CSM call + Executive loop-in';
+    else if((x.sentiment_score||0)>0.86&&x.priority!=='Critical') action='Override priority to Critical + notify CSM';
+    else if((x.sentiment_score||0)>0.7&&churnHigh) action='Schedule EBR within 48 hours';
+    const sentCls=x.sentiment_label==='Escalate Now'?'bs-escalate':'bs-atrisk';
+    return `<tr>
+      <td><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3)">${x.ticket_id}</span></td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${x.subject}">${x.subject}</td>
+      <td style="font-size:11px;color:var(--t2)">${x.client_name||'—'}</td>
+      <td><span class="badge ${sentCls}">${x.sentiment_label==='Escalate Now'?'<span class="dot"></span>':''}${(x.sentiment_score||0).toFixed(2)}</span></td>
+      <td><span class="badge ${{Critical:'bc',High:'bh',Medium:'bm',Low:'bl'}[x.priority]||'bl'}"><span class="dot"></span>${x.priority}</span></td>
+      <td style="font-size:11px;color:var(--t2)">${x.assigned_agent_name||'—'}</td>
+      <td style="font-size:11px;color:var(--t1);font-weight:500">${action}</td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--ok);font-size:12px">✅ No escalations needed</td></tr>';
+}
+
+function updateSidebar(){
+  const open=DB.tickets.filter(t=>t.status!=='Resolved').length;
+  document.getElementById('n-open').textContent=open;
+  const ts=Math.round(DB.tickets.filter(t=>t.assigned_team).length*4/60);
+  document.getElementById('sav-val').textContent=ts+'h';
+  document.getElementById('sav-sub').textContent=`saved this month · ${DB.tickets.length} tickets`;
+  document.getElementById('sav-prog').style.width=Math.min(ts/60*100,100)+'%';
+}
+
+// ════════════════════════════════════════════════
+// CREATE TICKET MODAL
+// ════════════════════════════════════════════════
+const RMAP={'API / Integration':{Critical:'Tier 2 API · SLA: 1hr',High:'API Support · SLA: 4hr',Medium:'API Support · SLA: 8hr',Low:'General · SLA: 24hr'},'Billing':{Critical:'Billing Manager · SLA: 1hr',High:'Billing Team · SLA: 4hr',Medium:'Billing Team · SLA: 8hr',Low:'Billing Team · SLA: 24hr'},'Login / Auth':{Critical:'Security Specialist · SLA: 1hr',High:'Auth Team · SLA: 4hr',Medium:'Auth Team · SLA: 8hr',Low:'General · SLA: 24hr'},'Onboarding':{Critical:'CSM Lead · SLA: 2hr',High:'Onboarding · SLA: 4hr',Medium:'Onboarding · SLA: 8hr',Low:'Onboarding · SLA: 24hr'}};
+function updRoute(){const p=document.getElementById('m-pri').value;const c=document.getElementById('m-cat').value;const m=RMAP[c]||{Critical:'CSM Lead · SLA: 2hr',High:'Senior Agent · SLA: 4hr',Medium:'Support · SLA: 8hr',Low:'Support · SLA: 24hr'};document.getElementById('m-route').textContent='→ '+(m[p]||'Support · SLA: 24hr');}
+function openCreate(){document.getElementById('createOverlay').classList.add('open');updRoute();}
+function closeCreate(){document.getElementById('createOverlay').classList.remove('open');}
+function createTicket(){
+  const sub=document.getElementById('m-sub').value||'New ticket';
+  const cli=document.getElementById('m-client').value||'Unknown';
+  const pri=document.getElementById('m-pri').value;
+  const cat=document.getElementById('m-cat').value;
+  const id='TKT-'+(5100+DB.tickets.length+1);
+  DB.tickets.unshift({ticket_id:id,created_at:new Date().toISOString().slice(0,16).replace('T',' '),subject:sub,client_name:cli,client_tier:'Mid-Market',priority:pri,status:'Open',category:cat,assigned_agent_name:'Auto-Routed',assigned_team:'TBD',sla_hours:pri==='Critical'?1:pri==='High'?4:8,sla_breached:'FALSE',tags:''});
+  afterLoad();closeCreate();
+  gotoView('tickets',document.getElementById('nav-tickets'));
+  toast(`✅ ${id} created and routed`,'ok');
+}
+
+// ════════════════════════════════════════════════
+// FILE UPLOAD
+// ════════════════════════════════════════════════
+function triggerUpload(type){const fi=document.getElementById('fileInput');fi.dataset.type=type;fi.click();}
+function handleUpload(e){
+  const file=e.target.files[0];const type=e.target.dataset.type;
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const rows=parseCSV(ev.target.result);
+    if(type==='tickets'){DB.tickets=rows;document.getElementById('uz-t-status').innerHTML=`<span style="color:var(--ok);font-family:'JetBrains Mono',monospace;font-size:10px">✓ ${rows.length} loaded</span>`;}
+    if(type==='clients'){DB.clients=rows;document.getElementById('uz-c-status').innerHTML=`<span style="color:var(--ok);font-family:'JetBrains Mono',monospace;font-size:10px">✓ ${rows.length} loaded</span>`;}
+    if(type==='agents'){DB.agents=rows;document.getElementById('uz-a-status').innerHTML=`<span style="color:var(--ok);font-family:'JetBrains Mono',monospace;font-size:10px">✓ ${rows.length} loaded</span>`;}
+    afterLoad(`${file.name} imported — ${rows.length} rows`);
+    e.target.value='';
+  };
+  r.readAsText(file);
+}
+
+const TMPL={tickets:'ticket_id,created_at,subject,client_name,client_tier,priority,status,category,assigned_agent_name,assigned_team,sla_hours,sla_breached,resolution_time_hours,first_response_minutes,csat_score,tags\nTKT-0001,2026-03-01 09:00,Sample ticket,Your Company,Enterprise,High,Open,API / Integration,Agent Name,Team,4,FALSE,,,,"api"',clients:'client_id,company_name,tier,industry,country,mrr_usd,health_score,nps,csat_avg,open_tickets,churn_risk,csm_name,active_users,total_seats,last_contact_date,arr_usd\nCLT-001,Company Name,Enterprise,SaaS,India,10000,75,8,4.5,2,Low,CSM Name,50,60,2026-03-01,120000',agents:'agent_id,name,role,team,tickets_open,tickets_closed_mtd,avg_response_min,avg_resolution_hours,csat_avg,capacity_percent\nAGT-001,Agent Name,Role,Team,5,30,15,4.0,4.5,70'};
+function dlTemplate(type){const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(TMPL[type]);a.download=`nexuscs_${type}_template.csv`;a.click();toast(`⇣ ${type}_template.csv downloaded`,'ok');}
+
+// ════════════════════════════════════════════════
+// EXPORT
+// ════════════════════════════════════════════════
+function exportCSV(rows,filename){
+  if(!rows.length){toast('No data to export','ok');return;}
+  const h=Object.keys(rows[0]);
+  const c=[h.join(','),...rows.map(r=>h.map(k=>`"${(r[k]||'').toString().replace(/"/g,'""')}"`).join(','))].join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(c);a.download=filename;a.click();
+  toast(`✅ ${filename} downloaded`,'ok');
+}
+function exportSLA(){exportCSV(DB.tickets.map(t=>({ticket_id:t.ticket_id,priority:t.priority,status:t.status,sla_hours:t.sla_hours,sla_breached:t.sla_breached,resolution_time_hours:t.resolution_time_hours,first_response_minutes:t.first_response_minutes})),'sla_report.csv');}
+
+// ════════════════════════════════════════════════
+// API TABS
+// ════════════════════════════════════════════════
+function switchApiTab(tab,el){
+  ['int','ep','wh','hire'].forEach(t=>{const el=document.getElementById('api-'+t);if(el)el.style.display=t===tab?'block':'none';});
+  document.querySelectorAll('#view-apidocs .tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+}
+
+function renderApiEndpoints(){
+  const endpoints=[
+    ['GET','var(--g)','rgba(0,229,160,.12)','/v2/tickets','List with filter/sort/pagination'],
+    ['GET','var(--g)','rgba(0,229,160,.12)','/v2/tickets/{id}','Single ticket with full history'],
+    ['POST','var(--b)','rgba(59,158,255,.12)','/v2/tickets','Create (triggers routing rules)'],
+    ['PATCH','var(--w)','rgba(245,158,11,.12)','/v2/tickets/{id}','Update status/priority/assignment'],
+    ['GET','var(--g)','rgba(0,229,160,.12)','/v2/clients','All clients with health scores'],
+    ['POST','var(--b)','rgba(59,158,255,.12)','/v2/bulk/tickets','Bulk import up to 10k tickets'],
+    ['GET','var(--g)','rgba(0,229,160,.12)','/v2/analytics/sla','SLA compliance with date range']
+  ];
+  const el=document.getElementById('api-endpoints-list');
+  if(el) el.innerHTML=endpoints.map(([m,c,bg,ep,desc])=>
+    '<div style="display:grid;grid-template-columns:70px 220px 1fr;gap:10px;padding:6px 0;border-bottom:1px solid var(--b1)">'+
+    '<span style="background:'+bg+';color:'+c+';border-radius:3px;padding:1px 6px;font-size:9px;text-align:center;align-self:center">'+m+'</span>'+
+    '<span style="color:var(--b)">'+ep+'</span>'+
+    '<span style="color:var(--t2);font-size:10px">'+desc+'</span></div>'
+  ).join('');
+}
+
+// ════════════════════════════════════════════════
+// COPY CODE
+// ════════════════════════════════════════════════
+function cp(btn){navigator.clipboard.writeText(btn.parentElement.innerText.replace('copy','').trim());btn.textContent='✓ copied';setTimeout(()=>btn.textContent='copy',1500);}
+
+// ════════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════════
+function toast(msg,type='ok'){
+  const t=document.getElementById('toast');
+  const cols={ok:'var(--ok)',info:'var(--b)',warn:'var(--w)',err:'var(--r)'};
+  t.style.borderLeftColor=cols[type]||cols.ok;
+  t.innerHTML=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ════════════════════════════════════════════════
+// NOTIFICATIONS
+// ════════════════════════════════════════════════
+let notifsOpen=false;
+function showNotifs(){
+  notifsOpen=!notifsOpen;
+  const panel=document.getElementById('notif-panel');
+  panel.style.display=notifsOpen?'block':'none';
+  if(notifsOpen) renderNotifs();
+}
+
+function renderNotifs(){
+  const t=DB.tickets;
+  const notifs=[];
+
+  // Generate real notifications from data
+  const crits=t.filter(x=>x.priority==='Critical'&&x.status!=='Resolved');
+  crits.forEach(x=>notifs.push({icon:'🔥',text:'<strong>'+x.ticket_id+'</strong> Critical — '+x.subject.slice(0,40),time:x.created_at,color:'var(--r)'}));
+
+  const atRisk=DB.clients.filter(c=>c.churn_risk==='High');
+  atRisk.forEach(c=>notifs.push({icon:'⚠️',text:'<strong>'+c.company_name+'</strong> health dropped to '+c.health_score,time:'Today',color:'var(--w)'}));
+
+  const overCap=DB.agents.filter(a=>parseFloat(a.capacity_percent)>85);
+  overCap.forEach(a=>notifs.push({icon:'👤',text:'<strong>'+a.name+'</strong> at '+a.capacity_percent+'% capacity',time:'Now',color:'var(--o)'}));
+
+  // SLA breaches
+  const breached=t.filter(x=>x.sla_breached==='TRUE').slice(0,2);
+  breached.forEach(x=>notifs.push({icon:'⏱',text:'<strong>'+x.ticket_id+'</strong> SLA breached',time:x.created_at,color:'var(--r)'}));
+
+  document.getElementById('notif-list').innerHTML=notifs.length?notifs.slice(0,8).map(n=>
+    '<div style="padding:10px 14px;border-bottom:1px solid var(--b1);display:flex;gap:9px;align-items:flex-start;cursor:pointer;transition:background .1s;" onmouseover="this.style.background=\'rgba(255,255,255,.02)\'" onmouseout="this.style.background=\'transparent\'">'+
+    '<span style="font-size:14px;flex-shrink:0;">'+n.icon+'</span>'+
+    '<div style="flex:1;"><div style="font-size:11px;color:var(--t2);line-height:1.4;">'+n.text+'</div>'+
+    '<div style="font-family:\'DM Mono\',monospace;font-size:8px;color:var(--t3);margin-top:3px;">'+n.time+'</div></div>'+
+    '<div style="width:6px;height:6px;border-radius:50%;background:'+n.color+';flex-shrink:0;margin-top:5px;"></div></div>'
+  ).join(''):'<div style="padding:20px;text-align:center;font-size:11px;color:var(--t3)">No notifications</div>';
+}
+
+function clearNotifs(){
+  document.getElementById('notif-list').innerHTML='<div style="padding:20px;text-align:center;font-size:11px;color:var(--ok)">✓ All caught up</div>';
+  const pip=document.getElementById('notif-pip');
+  if(pip)pip.style.display='none';
+}
+
+// Close notif panel when clicking outside
+document.addEventListener('click',function(e){
+  if(notifsOpen&&!e.target.closest('.notif-btn')){
+    notifsOpen=false;
+    document.getElementById('notif-panel').style.display='none';
+  }
+});
+
+// ════════════════════════════════════════════════
+// DRAG DROP UPLOAD
+// ════════════════════════════════════════════════
+['tickets','clients','agents'].forEach(type=>{
+  const z=document.getElementById('uz-'+type);
+  if(!z)return;
+  z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('drag');});
+  z.addEventListener('dragleave',()=>z.classList.remove('drag'));
+  z.addEventListener('drop',e=>{
+    e.preventDefault();z.classList.remove('drag');
+    const file=e.dataTransfer.files[0];
+    if(!file?.name.endsWith('.csv')){toast('⚠ Please drop a .csv file','warn');return;}
+    const fi=document.getElementById('fileInput');
+    fi.dataset.type=type;
+    const dt=new DataTransfer();dt.items.add(file);fi.files=dt.files;
+    handleUpload({target:fi});
+  });
+});
+
+// ════════════════════════════════════════════════
+// OPS CHATBOT
+// ════════════════════════════════════════════════
+let chatOpen=false;
+const chatHistory=[];
+let _chatApiKey=null; // stored in memory only — never saved to file
+
+function toggleChat(){
+  chatOpen=!chatOpen;
+  document.getElementById('chatPanel').classList.toggle('open',chatOpen);
+  const fab=document.getElementById('chatFab');
+  fab.classList.toggle('open',chatOpen);
+  fab.textContent=chatOpen?'✕':'💬';
+  if(chatOpen) document.getElementById('chatInput').focus();
+}
+
+function promptApiKey(){
+  const key=prompt('Enter your Anthropic API key to enable the Ops Assistant.\n\nThis key is stored in memory only — it is never saved to the file or sent anywhere except the Anthropic API.\n\nGet a key at: console.anthropic.com');
+  if(key&&key.trim()){
+    _chatApiKey=key.trim();
+    addChatMsg('🔑 API key set. Your key is stored in browser memory only and will be cleared when you close this tab.','system');
+    return true;
+  }
+  return false;
+}
+
+function showKeyBtn(){
+  const el=document.getElementById('chatKeyBtn');
+  if(el) el.style.display=_chatApiKey?'none':'flex';
+}
+
+function askSuggestion(el){
+  document.getElementById('chatInput').value=el.textContent;
+  sendChat();
+}
+
+function addChatMsg(text,role){
+  const box=document.getElementById('chatMessages');
+  const div=document.createElement('div');
+  div.className='chat-msg '+role;
+  div.innerHTML=text;
+  box.appendChild(div);
+  box.scrollTop=box.scrollHeight;
+  return div;
+}
+
+function showTyping(){
+  const box=document.getElementById('chatMessages');
+  const div=document.createElement('div');
+  div.className='chat-typing';
+  div.id='chatTyping';
+  div.innerHTML='<span></span><span></span><span></span>';
+  box.appendChild(div);
+  box.scrollTop=box.scrollHeight;
+}
+function hideTyping(){const el=document.getElementById('chatTyping');if(el)el.remove();}
+
+function buildDataContext(){
+  const t=DB.tickets, c=DB.clients, a=DB.agents;
+  if(!t.length) return 'No data loaded yet.';
+
+  const open=t.filter(x=>x.status!=='Resolved');
+  const crits=open.filter(x=>x.priority==='Critical');
+  const res=t.filter(x=>x.status==='Resolved');
+  const breached=t.filter(x=>x.sla_breached==='TRUE');
+  const withCsat=res.filter(x=>x.csat_score);
+  const avgCsat=withCsat.length?(withCsat.reduce((s,x)=>s+parseFloat(x.csat_score),0)/withCsat.length).toFixed(2):'N/A';
+  const avgResp=res.filter(x=>x.first_response_minutes).length?
+    (res.filter(x=>x.first_response_minutes).reduce((s,x)=>s+parseFloat(x.first_response_minutes),0)/res.filter(x=>x.first_response_minutes).length).toFixed(1):'N/A';
+  const slaComp=((t.length-breached.length)/t.length*100).toFixed(1);
+
+  const cats={};
+  t.forEach(x=>{cats[x.category]=(cats[x.category]||0)+1;});
+  const priCounts={};
+  t.forEach(x=>{priCounts[x.priority]=(priCounts[x.priority]||0)+1;});
+
+  const sentCounts={};
+  t.forEach(x=>{sentCounts[x.sentiment_label]=(sentCounts[x.sentiment_label]||0)+1;});
+  const avgSent=(t.reduce((s,x)=>s+(x.sentiment_score||0),0)/t.length).toFixed(2);
+
+  let ctx=`=== NEXUSCS LIVE DASHBOARD DATA ===
+DATE: ${new Date().toISOString().slice(0,10)}
+TOTAL TICKETS: ${t.length}
+OPEN: ${open.length} | IN PROGRESS: ${t.filter(x=>x.status==='In Progress').length} | RESOLVED: ${res.length}
+CRITICAL OPEN: ${crits.length}
+SLA COMPLIANCE: ${slaComp}% (${breached.length} breached)
+AVG FIRST RESPONSE: ${avgResp} min
+AVG CSAT: ${avgCsat}/5 (from ${withCsat.length} ratings)
+
+PRIORITY BREAKDOWN: ${Object.entries(priCounts).map(([k,v])=>k+': '+v).join(', ')}
+CATEGORY BREAKDOWN: ${Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([k,v])=>k+': '+v).join(', ')}
+SENTIMENT SUMMARY: Escalate Now: ${sentCounts['Escalate Now']||0} | At Risk: ${sentCounts['At Risk']||0} | Monitor: ${sentCounts['Monitor']||0} | Stable: ${sentCounts['Stable']||0} | Avg score: ${avgSent}
+
+=== OPEN/IN-PROGRESS TICKETS ===\n`;
+  open.forEach(x=>{
+    ctx+=`${x.ticket_id} | ${x.priority} | ${x.status} | ${x.client_name} (${x.client_tier}) | ${x.category} | Agent: ${x.assigned_agent_name} | SLA: ${x.sla_hours}h | Breached: ${x.sla_breached} | Sentiment: ${(x.sentiment_score||0).toFixed(2)} (${x.sentiment_label||'—'}) | Subject: ${x.subject}\n`;
+  });
+
+  ctx+=`\n=== ALL TICKETS ===\n`;
+  t.forEach(x=>{
+    ctx+=`${x.ticket_id} | ${x.priority} | ${x.status} | ${x.client_name} (${x.client_tier}) | ${x.category} | Agent: ${x.assigned_agent_name} | SLA: ${x.sla_hours}h | Breached: ${x.sla_breached} | Res: ${x.resolution_time_hours||'-'}h | CSAT: ${x.csat_score||'-'} | Sentiment: ${(x.sentiment_score||0).toFixed(2)} (${x.sentiment_label||'—'}) | Subject: ${x.subject}\n`;
+  });
+
+  if(c.length){
+    ctx+=`\n=== CLIENT ACCOUNTS (${c.length}) ===\n`;
+    c.forEach(x=>{
+      const ah=getAdjustedHealth(x);
+      ctx+=`${x.client_id} | ${x.company_name} | ${x.tier} | Base Health: ${x.health_score}/100 | Adjusted Health: ${ah.score}/100 (sentiment ${ah.sentAdj.label}) | Churn Risk: ${x.churn_risk} | MRR: $${x.mrr_usd} | ARR: $${x.arr_usd} | NPS: ${x.nps} | CSAT: ${x.csat_avg} | Open Tickets: ${x.open_tickets} | CSM: ${x.csm_name} | Active Users: ${x.active_users}/${x.total_seats} | Last Contact: ${x.last_contact_date} | Avg Sentiment: ${ah.sentAdj.avg.toFixed(2)}\n`;
+    });
+  }
+
+  if(a.length){
+    ctx+=`\n=== AGENTS (${a.length}) ===\n`;
+    a.forEach(x=>{
+      ctx+=`${x.agent_id} | ${x.name} | ${x.role} | Team: ${x.team} | Open: ${x.tickets_open} | Closed MTD: ${x.tickets_closed_mtd} | Avg Response: ${x.avg_response_min}m | Avg Resolution: ${x.avg_resolution_hours}h | CSAT: ${x.csat_avg} | Capacity: ${x.capacity_percent}%\n`;
+    });
+  }
+
+  return ctx;
+}
+
+async function sendChat(){
+  const input=document.getElementById('chatInput');
+  const msg=input.value.trim();
+  if(!msg) return;
+
+  input.value='';
+  document.getElementById('chatSugs').style.display='none';
+  addChatMsg(msg,'user');
+  chatHistory.push({role:'user',content:msg});
+
+  const sendBtn=document.getElementById('chatSendBtn');
+  sendBtn.disabled=true;
+  showTyping();
+
+  try {
+    // If not in claude.ai artifact env, we need an API key
+    if(!_chatApiKey){
+      // Try without key first (works in claude.ai artifacts)
+      // If it fails, we'll prompt for a key
+    }
+
+    const dataCtx=buildDataContext();
+    const systemPrompt=`You are the NexusCS Ops Assistant — an internal AI for CS managers and support leads. You answer questions about dashboard data: tickets, clients, SLA, agents.
+
+RULES:
+- Be concise (2-5 sentences for simple queries, more for detailed analysis)
+- Lead with the direct answer, then context
+- Use specific numbers and ticket IDs from the data
+- Use **bold** for key metrics and names
+- When listing items, use compact format (no verbose tables)
+- If data doesn't contain the answer, say so clearly
+- You are speaking to Arjun Sharma, CSM Lead
+- Never make up data — only use what is provided below
+- For recommendations, base them on the actual data patterns
+
+CURRENT DASHBOARD DATA:
+${dataCtx}`;
+
+    const recentHistory=chatHistory.slice(-10);
+
+    const headers={'Content-Type':'application/json'};
+    if(_chatApiKey){
+      headers['x-api-key']=_chatApiKey;
+      headers['anthropic-version']='2023-06-01';
+      headers['anthropic-dangerous-direct-browser-access']='true';
+    }
+
+    const response=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:headers,
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:systemPrompt,
+        messages:recentHistory
+      })
+    });
+
+    hideTyping();
+
+    if(!response.ok){
+      const errData=await response.json().catch(()=>({}));
+      const errMsg=errData.error?.message||'';
+
+      // If auth failed and no key set, prompt for key
+      if((response.status===401||response.status===403)&&!_chatApiKey){
+        if(promptApiKey()){
+          // Retry with key
+          chatHistory.pop(); // remove this user msg, it'll be re-sent
+          document.getElementById('chatInput').value=msg;
+          sendBtn.disabled=false;
+          sendChat();
+          return;
+        } else {
+          throw new Error('API key required. Click 🔑 in the chat header or try again to enter your key.');
+        }
+      }
+      throw new Error(errMsg||'API request failed ('+response.status+')');
+    }
+
+    const data=await response.json();
+    const reply=data.content.map(b=>b.text||'').join('');
+
+    const formatted=reply
+      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+      .replace(/`(.*?)`/g,'<span class="chat-metric">$1</span>')
+      .replace(/\n/g,'<br>');
+
+    chatHistory.push({role:'assistant',content:reply});
+    addChatMsg(formatted,'bot');
+
+  } catch(err){
+    hideTyping();
+    console.error('Chat error:',err);
+    addChatMsg('⚠ '+err.message+'<br><span style="font-size:10px;color:var(--t3)">In claude.ai: works automatically. External: click 🔑 to enter your Anthropic API key.</span>','bot');
+  }
+
+  sendBtn.disabled=false;
+  document.getElementById('chatInput').focus();
+}
+</script>
+</body>
+</html>

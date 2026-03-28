@@ -1,0 +1,192 @@
+# HOW TO UPLOAD NEXUSCS TO GITHUB
+# Complete step-by-step guide — no prior GitHub experience needed
+# ================================================================
+
+WHAT YOU WILL HAVE AT THE END:
+  ✓ Live demo URL:  https://kira-billion.github.io/nexuscs
+  ✓ GitHub repo:    https://github.com/KIRA-Billion/nexuscs
+  ✓ Time needed:    ~20 minutes
+
+FILES TO UPLOAD (4 files total):
+  - index.html      ← the NexusCS platform
+  - README.md       ← project description
+  - .gitignore      ← standard file (hidden file, starts with a dot)
+  - LICENSE         ← MIT license
+
+
+═══════════════════════════════════════════════════════════════════
+STEP 1 — CREATE THE REPOSITORY
+═══════════════════════════════════════════════════════════════════
+
+1. Go to https://github.com and sign in to your account
+   (your username is KIRA-Billion)
+
+2. Click the GREEN "New" button (top left, or the + icon top right)
+
+3. Fill in the form:
+   Repository name:  nexuscs          ← type this exactly, all lowercase
+   Description:      AI-Powered CS Operations Platform with ML Pipeline
+   Visibility:       ✓ Public          ← must be Public for GitHub Pages
+   
+   ☐ Add a README file               ← LEAVE THIS UNCHECKED
+      (we have our own README already)
+   
+   Click: CREATE REPOSITORY (green button at the bottom)
+
+4. You will see an empty repo page. Leave this tab open.
+
+
+═══════════════════════════════════════════════════════════════════
+STEP 2 — UPLOAD YOUR FILES
+═══════════════════════════════════════════════════════════════════
+
+1. On your empty repo page, click "uploading an existing file"
+   (you will see this as a link in the middle of the page)
+
+   OR click: Add file → Upload files (button near the top right)
+
+2. A drag-and-drop area appears.
+   
+   Drag ALL FOUR files into the box at once:
+     - index.html
+     - README.md
+     - .gitignore       ← NOTE: this file starts with a dot
+     - LICENSE
+   
+   IMPORTANT: If you cannot see .gitignore in your file manager
+   (because it starts with a dot), do this:
+   
+   On Mac:  Press Cmd + Shift + . (period) to show hidden files
+   On Windows: In File Explorer → View → Show → Hidden items ✓
+
+3. Wait for all 4 files to finish uploading (green ticks appear)
+
+4. At the bottom of the page, you will see "Commit changes"
+   In the first box type:   Initial commit — NexusCS v2.1
+   Leave everything else as default.
+
+5. Click: COMMIT CHANGES (green button)
+
+6. You are back on the repo page. You should see all 4 files listed.
+   The README.md will render automatically below — check it looks right.
+
+
+═══════════════════════════════════════════════════════════════════
+STEP 3 — TURN ON GITHUB PAGES (this makes the live URL work)
+═══════════════════════════════════════════════════════════════════
+
+1. On your repo page, click SETTINGS (top navigation bar, last item)
+
+2. In the left sidebar, scroll down and click PAGES
+
+3. Under "Build and deployment":
+   Source: Deploy from a branch
+   Branch: main          ← select "main" from the dropdown
+   Folder: / (root)      ← leave as root
+   
+   Click: SAVE
+
+4. You will see a message:
+   "Your site is ready to be published at
+    https://kira-billion.github.io/nexuscs"
+
+5. Wait 2–3 minutes then visit:
+   https://kira-billion.github.io/nexuscs
+
+   If you see a blank page, wait 2 more minutes and refresh.
+   GitHub Pages sometimes takes up to 5 minutes on first deploy.
+
+6. When it loads — log in with:
+   Email:    admin@nexuscs.io
+   Password: nexus2025
+
+
+═══════════════════════════════════════════════════════════════════
+STEP 4 — ADD THE LIVE URL TO YOUR REPO (makes it look professional)
+═══════════════════════════════════════════════════════════════════
+
+1. Go back to your repo main page:
+   https://github.com/KIRA-Billion/nexuscs
+
+2. On the right side, click the gear icon ⚙ next to "About"
+
+3. In the "Website" field, paste:
+   https://kira-billion.github.io/nexuscs
+
+4. Check: ✓ Use your GitHub Pages website
+   
+   Click: SAVE CHANGES
+
+5. The live URL now appears at the top of your repo for anyone who visits.
+
+
+═══════════════════════════════════════════════════════════════════
+STEP 5 — VERIFY EVERYTHING WORKS
+═══════════════════════════════════════════════════════════════════
+
+Check these 4 things:
+
+□ https://github.com/KIRA-Billion/nexuscs
+  → Shows all 4 files + README renders with the table of modules
+
+□ https://kira-billion.github.io/nexuscs
+  → NexusCS loads and you can log in
+
+□ README shows the live demo link at the top (clickable, green)
+
+□ Repo has the "About" website URL showing on the right side
+
+
+═══════════════════════════════════════════════════════════════════
+STEP 6 — UPDATE YOUR CV AND LINKEDIN
+═══════════════════════════════════════════════════════════════════
+
+Now that the URL is live, update these places:
+
+CV:
+  Header contact line → replace placeholder with live URL
+  NexusCS section → "Live demo: kira-billion.github.io/nexuscs"
+
+LinkedIn:
+  Featured section → Add the GitHub Pages URL as a featured link
+  About section → Add: "Built NexusCS — live at [URL]"
+
+Message to AU contact:
+  Add the live demo link to your outreach message
+  "You can see it live here: kira-billion.github.io/nexuscs"
+
+
+═══════════════════════════════════════════════════════════════════
+IF SOMETHING GOES WRONG
+═══════════════════════════════════════════════════════════════════
+
+Problem: Live URL shows 404 error
+Fix: GitHub Pages sometimes takes 5–10 min on first deploy.
+     Also check Settings → Pages → confirm Branch is set to "main"
+
+Problem: Page loads but looks broken / blank white
+Fix: Make sure the file is named exactly "index.html" (all lowercase)
+     Go to your repo → click the file → check the name at the top
+
+Problem: Cannot see .gitignore file to upload
+Fix: On Mac: Cmd + Shift + . shows hidden files
+     On Windows: View → Show → Hidden items
+     Alternative: You can skip .gitignore — it is optional.
+     The repo will work perfectly without it.
+
+Problem: README does not render / looks like plain text
+Fix: Make sure the file is named exactly "README.md" (capital README)
+
+═══════════════════════════════════════════════════════════════════
+YOUR FINAL URLS (save these)
+═══════════════════════════════════════════════════════════════════
+
+Live demo:   https://kira-billion.github.io/nexuscs
+GitHub repo: https://github.com/KIRA-Billion/nexuscs
+Your GitHub: https://github.com/KIRA-Billion
+
+Login for demo:
+  Email:     admin@nexuscs.io
+  Password:  nexus2025
+
+═══════════════════════════════════════════════════════════════════
