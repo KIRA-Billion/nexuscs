@@ -1,6 +1,6 @@
 # NexusCS — AI-Powered Customer Success Operations Platform
 
-> **Live Demo → [KIRA-Billion.github.io/nexuscs](https://KIRA-Billion.github.io/nexuscs)**
+> **Live Demo → [kira-billion.github.io/nexuscs](https://kira-billion.github.io/nexuscs)**
 
 A fully functional, single-file CS Ops platform built to demonstrate how AI automation, ML classification, and RAG-based support can replace manual L1 operations and give CS leaders real-time visibility into SLA health, churn risk, and team performance.
 
@@ -21,7 +21,7 @@ The platform bridges ML model output with CS operational workflow — translatin
 
 ## Live Demo
 
-**URL:** [https://kira-billion.github.io/nexuscs](https://KIRA-Billion.github.io/nexuscs)
+**URL:** [https://kira-billion.github.io/nexuscs](https://kira-billion.github.io/nexuscs)
 
 **Login credentials for demo:**
 - Email: `admin@nexuscs.io`
