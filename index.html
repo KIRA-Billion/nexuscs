@@ -336,7 +336,7 @@ tr:last-child td{border-bottom:none;}
 /* ── WORKFLOW ───────────────────────────────────── */
 .wf-canvas{background:var(--s1);border:1.5px solid var(--b1);border-radius:var(--radius);padding:22px;margin-bottom:20px;overflow-x:auto;box-shadow:var(--shadow-sm);}
 .wf-nodes{display:flex;align-items:center;gap:0;min-width:max-content;padding-bottom:8px;}
-.wf-node{background:var(--s2);border:1.5px solid var(--b2);border-radius:10px;padding:14px 16px;min-width:130px;cursor:grab;transition:all .2s;flex-shrink:0;}
+.wf-node{background:var(--s2);border:1.5px solid var(--b2);border-radius:10px;padding:14px 16px;min-width:130px;cursor:default;transition:all .2s;flex-shrink:0;}
 .wf-node:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
 .wf-node.tr{border-color:rgba(13,147,115,.3);background:rgba(13,147,115,.03);}
 .wf-node.co{border-color:rgba(217,119,6,.3);background:rgba(217,119,6,.03);}
@@ -655,6 +655,7 @@ tr:last-child td{border-bottom:none;}
     <div class="role-switcher" id="roleSwitcher">
       <button class="role-pill active" onclick="switchRole('all',this)">All Access</button>
       <button class="role-pill" onclick="switchRole('vp',this)">VP / Stakeholder</button>
+      <button class="role-pill" onclick="switchRole('csm',this)">CSM</button>
       <button class="role-pill" onclick="switchRole('manager',this)">CS Manager</button>
       <button class="role-pill" onclick="switchRole('agent',this)">L1 Agent</button>
     </div>
@@ -690,21 +691,22 @@ tr:last-child td{border-bottom:none;}
       <select onchange="switchRole(this.value,null);this.blur();" style="width:100%;background:var(--s2);border:1.5px solid var(--b1);border-radius:8px;padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t1);outline:none;cursor:pointer;" id="mobileRoleSel">
         <option value="all">All Access</option>
         <option value="vp">VP / Stakeholder</option>
+        <option value="csm">CSM</option>
         <option value="manager">CS Manager</option>
         <option value="agent">L1 Agent</option>
       </select>
     </div>
     <div class="nav-section">
       <div class="nav-label">Overview</div>
-      <div class="nav-item active" id="nav-dashboard" data-roles="all,vp,manager,agent" onclick="gotoView('dashboard',this)"><span class="nav-icon">◈</span>Dashboard</div>
-      <div class="nav-item" id="nav-tickets" data-roles="all,manager,agent" onclick="gotoView('tickets',this)"><span class="nav-icon">⊞</span>Ticket Queue<span class="nav-badge nb-red" id="n-open">0</span></div>
-      <div class="nav-item" id="nav-clients" data-roles="all,vp,manager" onclick="gotoView('clients',this)"><span class="nav-icon">◉</span>Client Health<span class="nav-badge nb-orange" id="n-risk">0</span></div>
+      <div class="nav-item active" id="nav-dashboard" data-roles="all,vp,manager,csm,agent" onclick="gotoView('dashboard',this)"><span class="nav-icon">◈</span>Dashboard</div>
+      <div class="nav-item" id="nav-tickets" data-roles="all,manager,csm,agent" onclick="gotoView('tickets',this)"><span class="nav-icon">⊞</span>Ticket Queue<span class="nav-badge nb-red" id="n-open">0</span></div>
+      <div class="nav-item" id="nav-clients" data-roles="all,vp,manager,csm" onclick="gotoView('clients',this)"><span class="nav-icon">◉</span>Client Health<span class="nav-badge nb-orange" id="n-risk">0</span></div>
     </div>
     <div class="nav-section">
       <div class="nav-label">Automation</div>
       <div class="nav-item" id="nav-routing" data-roles="all,manager" onclick="gotoView('routing',this)"><span class="nav-icon">⇋</span>Routing Rules<span class="nav-badge nb-green">8</span></div>
       <div class="nav-item" id="nav-workflows" data-roles="all,manager" onclick="gotoView('workflows',this)"><span class="nav-icon">◎</span>Workflows</div>
-      <div class="nav-item" id="nav-triage" data-roles="all,manager,agent" onclick="gotoView('triage',this)"><span class="nav-icon">⚡</span>AI Triage</div>
+      <div class="nav-item" id="nav-triage" data-roles="all,manager,csm,agent" onclick="gotoView('triage',this)"><span class="nav-icon">⚡</span>AI Triage</div>
     </div>
     <div class="nav-section">
       <div class="nav-label">Analytics</div>
@@ -718,8 +720,8 @@ tr:last-child td{border-bottom:none;}
     </div>
     <div class="nav-section">
       <div class="nav-label">AI</div>
-      <div class="nav-item" id="nav-chat" data-roles="all,vp,manager,agent" onclick="toggleChat()"><span class="nav-icon">💬</span>Ops Assistant<span class="nav-badge nb-green">AI</span></div>
-      <div class="nav-item" id="nav-mlpipeline" data-roles="all,vp,manager" onclick="gotoView('mlpipeline',this)"><span class="nav-icon">⟳</span>ML Pipeline<span class="nav-badge nb-green">LIVE</span></div>
+      <div class="nav-item" id="nav-chat" data-roles="all,vp,manager,csm" onclick="toggleChat()"><span class="nav-icon">💬</span>Ops Assistant<span class="nav-badge nb-green">AI</span></div>
+      <div class="nav-item" id="nav-mlpipeline" data-roles="all,vp,manager,csm" onclick="gotoView('mlpipeline',this)"><span class="nav-icon">⟳</span>ML Pipeline<span class="nav-badge nb-green">LIVE</span></div>
     </div>
     <div class="sidebar-footer">
       <div class="savings-card">
@@ -777,6 +779,14 @@ tr:last-child td{border-bottom:none;}
       <div class="card mb" id="d-chart-card">
         <div class="sec">📊 Tickets by Category</div>
         <div id="d-chart" style="display:flex;gap:8px;align-items:flex-end;height:72px;margin-top:10px;"></div>
+      </div>
+      <div class="card mb" id="d-my-queue" style="display:none;border-color:rgba(37,99,235,.2)">
+        <div class="sec" style="color:var(--b)">🎫 My Queue</div>
+        <div id="d-my-queue-content"></div>
+      </div>
+      <div class="card mb" id="d-csm-overview" style="display:none;border-color:rgba(13,147,115,.2)">
+        <div class="sec" style="color:var(--g)">💚 My Accounts — Health & Sentiment</div>
+        <div id="d-csm-overview-content"></div>
       </div>
       <div class="card mb" id="d-sent-heatmap-card">
         <div class="sec">🌡 Sentiment Heatmap — by Client</div>
@@ -842,8 +852,12 @@ tr:last-child td{border-bottom:none;}
     <!-- ── WORKFLOWS ── -->
     <div class="view" id="view-workflows">
       <div class="ph">
-        <div><div class="ph-title">Workflow Builder</div><div class="ph-sub">Visual automation for repetitive support tasks</div></div>
-        <div style="display:flex;gap:8px;"><button class="btn btn-ghost" onclick="simulateWorkflow()">▶ Simulate</button><button class="btn btn-g" onclick="saveWorkflow()">Save</button></div>
+        <div><div class="ph-title">Workflow Builder</div><div class="ph-sub">Visual automation design · simulate against live data · Make.com deployment patterns</div></div>
+        <div style="display:flex;gap:8px;"><button class="btn btn-ghost" onclick="simulateWorkflow()">▶ Simulate</button><button class="btn btn-g" onclick="saveWorkflow()">Export Logic</button></div>
+      </div>
+      <div style="font-size:11px;color:var(--t2);background:rgba(37,99,235,.04);border:1px solid rgba(37,99,235,.15);border-radius:7px;padding:10px 14px;margin-bottom:14px;line-height:1.7;">
+        <strong style="color:var(--b)">ℹ️ Prototype scope</strong> — Node drag-and-drop editing and live execution require a backend. This module demonstrates workflow logic design and simulation against your loaded data. 
+        To deploy these workflows in production: see <strong>API Docs → Webhook Patterns</strong> for the Make.com implementation.
       </div>
       <div class="tabbar" id="wf-tabbar">
         <div class="tab active" onclick="switchWfTab(0,this)">Escalation Flow</div>
@@ -957,30 +971,32 @@ tr:last-child td{border-bottom:none;}
       <div class="ph"><div><div class="ph-title">API Integration Guide</div><div class="ph-sub">Connect NexusCS to your existing CRM stack</div></div><span class="live-chip"><span class="live-d"></span>v2.1</span></div>
       <div class="alert a-ok mb">
         <span>💼</span>
-        <div><strong>Is this a good hiring project?</strong> <span style="color:var(--t2);">Yes — see the Hiring Guide tab for talking points, resume bullets, and interview scripts.</span></div>
+        <div><strong style="color:var(--t1)">Integration Architecture</strong> <span style="color:var(--t2);">— CSV import works now. Webhook patterns and API schema documented for production deployment via Make.com.</span></div>
       </div>
       <div class="tabbar">
-        <div class="tab active" onclick="switchApiTab('int',this)">Integration</div>
-        <div class="tab" onclick="switchApiTab('ep',this)">Endpoints</div>
-        <div class="tab" onclick="switchApiTab('wh',this)">Webhooks</div>
-        <div class="tab" onclick="switchApiTab('hire',this)">💼 Hiring Guide</div>
+        <div class="tab active" onclick="switchApiTab('int',this)">How to Connect</div>
+        <div class="tab" onclick="switchApiTab('ep',this)">API Schema</div>
+        <div class="tab" onclick="switchApiTab('wh',this)">Webhook Patterns</div>
+        <div class="tab" onclick="switchApiTab('hire',this)">📋 About This Project</div>
       </div>
       <div id="api-int">
         <div class="g2 mb">
           <div class="card">
             <div class="sec">🔌 Supported Integrations</div>
+            <div style="font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-bottom:10px;background:rgba(13,147,115,.05);border:1px solid rgba(13,147,115,.15);border-radius:6px;padding:8px 10px;">CSV export from these platforms loads directly into Import Data</div>
             <div style="font-size:12px;color:var(--t2);line-height:2;">
-              <div><span style="color:var(--ok)">●</span> <strong style="color:var(--t1)">Zendesk</strong> — ticket sync via REST + webhooks</div>
-              <div><span style="color:var(--ok)">●</span> <strong style="color:var(--t1)">Freshdesk</strong> — bi-directional ticket sync</div>
-              <div><span style="color:var(--ok)">●</span> <strong style="color:var(--t1)">HubSpot CRM</strong> — contact, deal, company sync</div>
-              <div><span style="color:var(--ok)">●</span> <strong style="color:var(--t1)">Salesforce</strong> — case + account + contact</div>
-              <div><span style="color:var(--w)">●</span> <strong style="color:var(--t1)">Jira / Linear</strong> — engineering escalations</div>
-              <div><span style="color:var(--w)">●</span> <strong style="color:var(--t1)">Slack</strong> — alerts + /nexuscs command</div>
+              <div><span style="color:var(--g)">✓</span> <strong style="color:var(--t1)">Zendesk</strong> — export tickets CSV → Import Data</div>
+              <div><span style="color:var(--g)">✓</span> <strong style="color:var(--t1)">Freshdesk</strong> — export tickets CSV → Import Data</div>
+              <div><span style="color:var(--g)">✓</span> <strong style="color:var(--t1)">Salesforce</strong> — export cases CSV → Import Data</div>
+              <div><span style="color:var(--g)">✓</span> <strong style="color:var(--t1)">HubSpot CRM</strong> — export contacts/deals CSV → Import Data</div>
+              <div><span style="color:var(--b)">◎</span> <strong style="color:var(--t1)">Jira / Linear</strong> — real-time sync via Make.com connector</div>
+              <div><span style="color:var(--b)">◎</span> <strong style="color:var(--t1)">Slack</strong> — alert routing via Make.com webhook</div>
             </div>
           </div>
           <div class="card">
-            <div class="sec">🔑 Auth</div>
-            <div class="codeblock"><button class="copy-btn" onclick="cp(this)">copy</button><span class="cc"># Bearer token auth</span>
+            <div class="sec">🔑 Auth <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);font-weight:400;margin-left:8px;">REFERENCE SCHEMA</span></div>
+            <div style="font-size:11px;color:var(--t3);margin-bottom:8px;">Illustrative — documents intended auth pattern for production deployment</div>
+            <div class="codeblock"><button class="copy-btn" onclick="cp(this)">copy</button><span class="cc"># Bearer token auth (reference pattern)</span>
 <span class="cf">curl</span> -X GET \
   https://api.nexuscs.io/v2/tickets \
   -H <span class="cs">"Authorization: Bearer YOUR_KEY"</span></div>
@@ -989,23 +1005,31 @@ tr:last-child td{border-bottom:none;}
         <div class="card mb">
           <div class="sec">🏢 4-Step Company Setup</div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px;">
-            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">1️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Export CSVs</div><div style="font-size:11px;color:var(--t2)">From Zendesk, Freshdesk, or Salesforce</div></div>
-            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">2️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Map Columns</div><div style="font-size:11px;color:var(--t2)">Rename headers to NexusCS schema</div></div>
-            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">3️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Upload</div><div style="font-size:11px;color:var(--t2)">Drag & drop. Dashboards reload instantly.</div></div>
-            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">4️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Automate</div><div style="font-size:11px;color:var(--t2)">Set webhooks for real-time sync</div></div>
+            <div style="background:rgba(13,147,115,.05);border:1.5px solid rgba(13,147,115,.2);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">1️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Export CSVs</div><div style="font-size:11px;color:var(--t2)">From Zendesk, Freshdesk, or Salesforce</div><div style="font-size:9px;color:var(--ok);font-family:'JetBrains Mono',monospace;margin-top:6px;">✓ Works now</div></div>
+            <div style="background:rgba(13,147,115,.05);border:1.5px solid rgba(13,147,115,.2);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">2️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Map Columns</div><div style="font-size:11px;color:var(--t2)">Rename headers to NexusCS schema</div><div style="font-size:9px;color:var(--ok);font-family:'JetBrains Mono',monospace;margin-top:6px;">✓ Templates provided</div></div>
+            <div style="background:rgba(13,147,115,.05);border:1.5px solid rgba(13,147,115,.2);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">3️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Upload</div><div style="font-size:11px;color:var(--t2)">Drag & drop. Dashboards reload instantly.</div><div style="font-size:9px;color:var(--ok);font-family:'JetBrains Mono',monospace;margin-top:6px;">✓ Works now</div></div>
+            <div style="background:rgba(37,99,235,.04);border:1.5px solid rgba(37,99,235,.15);border-radius:8px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">4️⃣</div><div style="font-weight:600;font-size:12px;margin-bottom:4px;">Automate</div><div style="font-size:11px;color:var(--t2)">Real-time sync via Make.com webhook</div><div style="font-size:9px;color:var(--b);font-family:'JetBrains Mono',monospace;margin-top:6px;">→ See Webhook Patterns tab</div></div>
           </div>
         </div>
       </div>
       <div id="api-ep" style="display:none;">
         <div class="card mb">
-          <div class="sec">📡 REST Endpoints</div>
+          <div class="sec">📡 API Schema <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);font-weight:400;margin-left:8px;">REFERENCE ARCHITECTURE</span></div>
+          <div style="font-size:11px;color:var(--t2);background:rgba(37,99,235,.04);border:1px solid rgba(37,99,235,.15);border-radius:6px;padding:10px 12px;margin-bottom:14px;">
+            <strong style="color:var(--b)">Reference architecture</strong> — documents the intended REST API schema for production deployment. Current data layer uses CSV import via the Import Data module.
+          </div>
           <div id="api-endpoints-list" style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:2.2;"></div>
         </div>
       </div>
       <div id="api-wh" style="display:none;">
         <div class="card mb">
-          <div class="sec">🔔 Incoming Webhooks</div>
-          <div class="codeblock"><button class="copy-btn" onclick="cp(this)">copy</button><span class="cc"># Zendesk → NexusCS auto-import</span>
+          <div class="sec">🔔 Webhook Patterns <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);font-weight:400;margin-left:8px;">REFERENCE SCHEMA</span></div>
+          <div style="font-size:11px;color:var(--t2);background:rgba(13,147,115,.05);border:1px solid rgba(13,147,115,.15);border-radius:6px;padding:10px 12px;margin-bottom:14px;">
+            <strong style="color:var(--g)">In scope for AI CX Automation</strong> — designing this webhook payload pattern and wiring it through Make.com is the actual integration work. The schema below is the exact structure a Make.com HTTP module or Zapier webhook would send. Implement in production by pointing your Zendesk trigger at a Make.com webhook receiver.
+          </div>
+          <div class="codeblock"><button class="copy-btn" onclick="cp(this)">copy</button><span class="cc"># Zendesk → Make.com → NexusCS pattern</span>
+<span class="cc"># Step 1: Zendesk trigger fires on ticket create/update</span>
+<span class="cc"># Step 2: Make.com HTTP module sends to your endpoint</span>
 POST https://hooks.nexuscs.io/ingest/<span class="cv">YOUR_TOKEN</span>
 {
   <span class="cs">"source_tool"</span>: <span class="cs">"zendesk"</span>,
@@ -1013,38 +1037,66 @@ POST https://hooks.nexuscs.io/ingest/<span class="cv">YOUR_TOKEN</span>
   <span class="cs">"priority"</span>: <span class="cs">"{{ ticket.priority }}"</span>,
   <span class="cs">"client_email"</span>: <span class="cs">"{{ ticket.requester.email }}"</span>
 }</div>
+          <div style="margin-top:14px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);margin-bottom:8px;">MAKE.COM CONNECTOR — SUPPORTED PLATFORMS</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+              <div style="background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:10px;font-size:11px;"><strong>Zendesk</strong><div style="color:var(--t3);font-size:10px;margin-top:2px;">Native connector available</div></div>
+              <div style="background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:10px;font-size:11px;"><strong>Freshdesk</strong><div style="color:var(--t3);font-size:10px;margin-top:2px;">Native connector available</div></div>
+              <div style="background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:10px;font-size:11px;"><strong>JIRA SM</strong><div style="color:var(--t3);font-size:10px;margin-top:2px;">REST API + webhook</div></div>
+            </div>
+          </div>
         </div>
       </div>
       <div id="api-hire" style="display:none;">
         <div class="g2 mb">
           <div class="card" style="border-color:rgba(0,229,160,.2)">
-            <div class="sec" style="color:var(--g)">✅ Skills This Proves</div>
+            <div class="sec" style="color:var(--g)">✅ Skills This Demonstrates</div>
             <div style="font-size:12px;color:var(--t2);line-height:2;">
               <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">Workflow Automation</strong> — routing rules, escalation, conditional logic</div>
-              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">SLA Management</strong> — multi-tier config, breach prevention, compliance</div>
-              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">Client Health Scoring</strong> — churn signals, proactive outreach</div>
-              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">Data-Driven Ops</strong> — CSV import/export, KPI dashboards, NPS/CSAT</div>
-              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">API / Integration</strong> — REST, webhooks, CRM integrations</div>
-              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">AI Triage Concepts</strong> — classification, sentiment, auto-tagging</div>
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">SLA Management</strong> — multi-tier config, breach prevention, compliance reporting</div>
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">Client Health Scoring</strong> — sentiment-adjusted composite score, churn signals</div>
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">Data-Driven Ops</strong> — CSV import/export, KPI dashboards, NPS/CSAT analysis</div>
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">Integration Architecture</strong> — webhook payload design, REST schema, Make.com patterns</div>
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">AI Triage</strong> — keyword classification, sentiment scoring, priority routing</div>
+              <div><span style="color:var(--g)">→</span> <strong style="color:var(--t1)">RAG Implementation</strong> — context-aware assistant querying live platform data</div>
             </div>
           </div>
           <div class="card">
-            <div class="sec">🎯 Interview Scripts</div>
+            <div class="sec">🎯 Talking Points</div>
             <div style="font-size:12px;color:var(--t2);line-height:1.8;">
-              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--b1);">"I built NexusCS to simulate the full ops stack a CS Lead owns — routing, SLA, client health, and automation."</div>
-              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--b1);">"The routing engine saves ~47h/month by auto-assigning tickets based on priority, category, and client tier."</div>
-              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--b1);">"Any company can load their real Zendesk/Freshdesk data via CSV in under 5 minutes."</div>
-              <div>"The health score (0-100) combines open tickets, NPS, CSAT, and last-contact recency to flag churn risk."</div>
+              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--b1);">"NexusCS demonstrates the full ops stack a CS Lead owns — routing, SLA, client health, and automation — as a single deployable system."</div>
+              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--b1);">"Load your real Zendesk or Freshdesk CSV export — the platform parses it, scores every ticket for sentiment, and updates all dashboards instantly."</div>
+              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--b1);">"The health score cross-signals three sources: base CRM health, ticket sentiment average, and churn risk flag — not just a static field."</div>
+              <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--b1);">"The Ops Assistant passes full live context — every ticket, client health score, agent capacity — to the AI on each query. It's not a generic chatbot."</div>
+              <div>"The Webhook Patterns tab shows how I'd wire Zendesk → Make.com → this dashboard for real-time sync in a production environment."</div>
             </div>
           </div>
         </div>
         <div class="card">
-          <div class="sec">📊 Numbers to Quote</div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px;">
-            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--g)">89%</div><div style="font-size:10px;color:var(--t2);margin-top:4px">Tickets auto-routed</div></div>
-            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--b)">47h</div><div style="font-size:10px;color:var(--t2);margin-top:4px">Monthly time saved</div></div>
-            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--ok)">96.4%</div><div style="font-size:10px;color:var(--t2);margin-top:4px">SLA compliance</div></div>
-            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;text-align:center;"><div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--o)">4.7★</div><div style="font-size:10px;color:var(--t2);margin-top:4px">Avg CSAT</div></div>
+          <div class="sec">📋 About This Project</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px;">
+            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);margin-bottom:8px;">WHAT WORKS NOW</div>
+              <div style="font-size:11px;color:var(--t2);line-height:1.9;">
+                <div>✓ CSV import from any CRM export</div>
+                <div>✓ Sentiment scoring on all tickets</div>
+                <div>✓ Routing rules engine (8 rules)</div>
+                <div>✓ SLA tracking + compliance report</div>
+                <div>✓ Client health score (sentiment-adjusted)</div>
+                <div>✓ Workflow simulator against live data</div>
+                <div>✓ AI Ops Assistant (requires API key)</div>
+              </div>
+            </div>
+            <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);margin-bottom:8px;">ARCHITECTURE (PRODUCTION PATH)</div>
+              <div style="font-size:11px;color:var(--t2);line-height:1.9;">
+                <div>◎ Live webhook via Make.com</div>
+                <div>◎ Real-time Zendesk/Freshdesk sync</div>
+                <div>◎ REST API backend (schema documented)</div>
+                <div>◎ Slack alert routing</div>
+                <div>◎ OAuth credential management</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1091,26 +1143,27 @@ POST https://hooks.nexuscs.io/ingest/<span class="cv">YOUR_TOKEN</span>
       </div>
 
       <div class="card">
-        <div class="sec">🔌 Integration Readiness — Connect to Live Data Sources</div>
+        <div class="sec">🔌 Integration Readiness</div>
+        <div style="font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-bottom:12px;">CSV export from these platforms loads directly · real-time sync via Make.com connector</div>
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px;">
           <div class="int-card">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:18px">🎫</span><strong style="font-family:'Outfit',sans-serif;font-size:13px;">Zendesk</strong></div>
-            <div style="font-size:11px;color:var(--t2)">Native Make.com connector available · webhook setup</div>
-            <div class="int-status int-ready">⊕ Ready to connect</div>
+            <div style="font-size:11px;color:var(--t2)">Export tickets CSV → Import Data · real-time via Make.com</div>
+            <div class="int-status" style="color:var(--b);background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:4px;padding:3px 8px;font-size:9px;font-family:'JetBrains Mono',monospace;margin-top:8px;display:inline-block;">◎ Via Make.com connector</div>
           </div>
           <div class="int-card">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:18px">💬</span><strong style="font-family:'Outfit',sans-serif;font-size:13px;">Freshdesk</strong></div>
-            <div style="font-size:11px;color:var(--t2)">Native Make.com connector · Freddy AI compatible</div>
-            <div class="int-status int-ready">⊕ Ready to connect</div>
+            <div style="font-size:11px;color:var(--t2)">Export tickets CSV → Import Data · Freddy AI compatible</div>
+            <div class="int-status" style="color:var(--b);background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:4px;padding:3px 8px;font-size:9px;font-family:'JetBrains Mono',monospace;margin-top:8px;display:inline-block;">◎ Via Make.com connector</div>
           </div>
           <div class="int-card">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:18px">🔧</span><strong style="font-family:'Outfit',sans-serif;font-size:13px;">JIRA Service Management</strong></div>
-            <div style="font-size:11px;color:var(--t2)">REST API · webhook trigger</div>
-            <div class="int-status int-ready">⊕ Ready to connect</div>
+            <div style="font-size:11px;color:var(--t2)">REST API + webhook trigger via Make.com HTTP module</div>
+            <div class="int-status" style="color:var(--b);background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:4px;padding:3px 8px;font-size:9px;font-family:'JetBrains Mono',monospace;margin-top:8px;display:inline-block;">◎ Via Make.com connector</div>
           </div>
           <div class="int-card">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:18px">📄</span><strong style="font-family:'Outfit',sans-serif;font-size:13px;">Custom CSV</strong></div>
-            <div style="font-size:11px;color:var(--t2)">Upload ticket export · auto-scored on import</div>
+            <div style="font-size:11px;color:var(--t2)">Upload ticket export · auto-scored on import · works now</div>
             <div class="int-status int-active"><span class="dot"></span> Active</div>
           </div>
         </div>
@@ -1171,7 +1224,7 @@ POST https://hooks.nexuscs.io/ingest/<span class="cv">YOUR_TOKEN</span>
   </div>
   <div class="chat-messages" id="chatMessages">
     <div class="chat-msg system">Ops Assistant connected · querying live data</div>
-    <div class="chat-msg bot">Hey Arjun — I can answer questions about your <strong>tickets</strong>, <strong>clients</strong>, <strong>SLA compliance</strong>, and <strong>agent performance</strong>. Ask me anything about the dashboard data.</div>
+    <div class="chat-msg bot" id="chatWelcome">Hey — I can answer questions about your <strong>tickets</strong>, <strong>clients</strong>, <strong>SLA compliance</strong>, and <strong>agent performance</strong>. Ask me anything about the dashboard data.</div>
   </div>
   <div class="chat-suggestions" id="chatSugs">
     <div class="chat-sug" onclick="askSuggestion(this)">Critical open tickets?</div>
@@ -1252,7 +1305,7 @@ document.addEventListener("keydown",function(e){
 // ROLE-BASED VIEW SYSTEM
 // ════════════════════════════════════════════════
 let currentViewRole='all';
-const ROLE_LABELS={all:'All Access',vp:'VP / Stakeholder',manager:'CS Manager',agent:'L1 Agent'};
+const ROLE_LABELS={all:'All Access',vp:'VP / Stakeholder',csm:'CSM',manager:'CS Manager',agent:'L1 Agent'};
 
 function switchRole(role,el){
   currentViewRole=role;
@@ -1287,9 +1340,26 @@ function switchRole(role,el){
   });
 
   // Dashboard role-specific sections
+  // Show/hide Ops Assistant FAB for agent role
+  const fab = document.getElementById('chatFab');
+  if(fab) fab.style.display = (role==='agent') ? 'none' : 'flex';
+  if(role==='agent' && chatOpen) toggleChat();
+
+  // Update suggested prompts per role
+  updateChatSuggestions(role);
+
+  // Show/hide role-specific dashboard cards
+  const myQueue = document.getElementById('d-my-queue');
+  const csmOverview = document.getElementById('d-csm-overview');
+  const heatmap = document.getElementById('d-sent-heatmap-card');
+  const chartCard = document.getElementById('d-chart-card');
+  if(myQueue) myQueue.style.display = (role==='agent'||role==='all') ? 'block' : 'none';
+  if(csmOverview) csmOverview.style.display = (role==='csm'||role==='all') ? 'block' : 'none';
+  if(heatmap) heatmap.style.display = (role==='agent') ? 'none' : 'block';
+  if(chartCard) chartCard.style.display = (role==='agent') ? 'none' : 'block';
+
   const execRow=document.getElementById('d-exec-row');
   if(execRow){
-    // VP sees executive briefing prominently; others see it smaller or in 'all'
     execRow.style.display=(role==='vp'||role==='all'||role==='manager')?'grid':'none';
   }
 
@@ -1305,6 +1375,7 @@ function switchRole(role,el){
 
   // Update greeting based on role
   updateGreeting();
+  if(DB.tickets.length) renderDashboard();
   toast('👤 Switched to '+ROLE_LABELS[role]+' view','ok');
 }
 
@@ -1314,7 +1385,7 @@ function updateGreeting(){
   const hr=new Date().getHours();
   const greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
   const name=currentUser?currentUser.name.split(' ')[0]:'Arjun';
-  const suffix={all:'👋',vp:'— Executive Briefing 📊',manager:'— Operations Center ⚡',agent:'— Your Queue 🎫'};
+  const suffix={all:'👋',vp:'— Executive Briefing 📊',csm:'— Account Overview 💚',manager:'— Operations Center ⚡',agent:'— Your Queue 🎫'};
   el.textContent=greet+', '+name+' '+(suffix[currentViewRole]||'👋');
 }
 
@@ -1668,6 +1739,66 @@ function renderDashboard(){
     const lbl=sentimentLabel(c.avg);
     return `<div class="hrow"><div class="hname">${c.name}</div><div class="htrack"><div class="hfill" style="width:${Math.round(c.avg*100)}%;background:${col}"></div></div><div class="hscore" style="color:${col}">${c.avg.toFixed(2)}</div><span class="badge" style="font-size:8px;padding:1px 5px;margin-left:6px;background:${col}15;color:${col};border:1px solid ${col}30">${lbl}</span></div>`;
   }).join('');
+  // ── MY QUEUE (agent view) ──
+  const agentName = currentUser ? currentUser.name : 'Arjun Sharma';
+  const myTix = t.filter(x => x.assigned_agent_name === agentName && x.status !== 'Resolved');
+  const myBreached = myTix.filter(x => x.sla_breached === 'TRUE').length;
+  const myEsc = myTix.filter(x => x.sentiment_label === 'Escalate Now' || x.sentiment_label === 'At Risk').length;
+  document.getElementById('d-my-queue-content').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:10px;text-align:center;">
+        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:20px;color:var(--b)">${myTix.length}</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:2px">Open tickets</div>
+      </div>
+      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:10px;text-align:center;">
+        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:20px;color:${myBreached>0?'var(--r)':'var(--ok)'}">${myBreached}</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:2px">SLA breached</div>
+      </div>
+      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:10px;text-align:center;">
+        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:20px;color:${myEsc>0?'var(--w)':'var(--ok)'}">${myEsc}</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:2px">Need attention</div>
+      </div>
+    </div>
+    ${myTix.length ? myTix.slice(0,5).map(x=>{
+      const sentCol = x.sentiment_label==='Escalate Now'?'var(--r)':x.sentiment_label==='At Risk'?'var(--w)':'var(--b)';
+      return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b1);">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);flex-shrink:0">${x.ticket_id}</span>
+        <span style="flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.subject}</span>
+        <span style="font-size:10px;padding:2px 6px;border-radius:3px;background:${sentCol}15;color:${sentCol};flex-shrink:0">${x.sentiment_label||'—'}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);flex-shrink:0">${x.sla_hours}h SLA</span>
+      </div>`;
+    }).join('') : '<div style="text-align:center;padding:16px;color:var(--ok);font-size:12px">✅ Queue clear</div>'}
+    ${myTix.length>5?`<div style="font-size:11px;color:var(--t3);padding-top:8px">+${myTix.length-5} more — open Ticket Queue to see all</div>`:''}
+  `;
+
+  // ── CSM ACCOUNT OVERVIEW ──
+  if(DB.clients.length){
+    const csmClients = DB.clients.map(c=>{
+      const ah = getAdjustedHealth(c);
+      const cTix = t.filter(x=>x.client_name===c.company_name&&x.status!=='Resolved');
+      return {...c, adj_health:ah.score, sentAdj:ah.sentAdj, openTix:cTix.length};
+    }).sort((a,b)=>a.adj_health-b.adj_health);
+    document.getElementById('d-csm-overview-content').innerHTML = `
+      <div style="margin-top:10px;">
+        ${csmClients.map(c=>{
+          const hCol = c.adj_health<50?'var(--r)':c.adj_health<70?'var(--w)':'var(--ok)';
+          const rCol = c.churn_risk==='High'?'var(--r)':c.churn_risk==='Medium'?'var(--w)':'var(--ok)';
+          return `<div style="display:grid;grid-template-columns:160px 1fr 60px 80px 70px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--b1);">
+            <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.company_name}</div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="flex:1;height:5px;background:var(--b1);border-radius:3px;overflow:hidden;">
+                <div style="height:100%;width:${c.adj_health}%;background:${hCol};border-radius:3px;"></div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:${hCol}">${c.adj_health}</span>
+            </div>
+            <div style="font-size:10px;color:var(--t2);text-align:center">${c.openTix} open</div>
+            <div style="font-size:10px;padding:2px 6px;border-radius:3px;background:${rCol}15;color:${rCol};text-align:center">${c.churn_risk} Risk</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);text-align:right">${c.sentAdj.label} sentiment</div>
+          </div>`;
+        }).join('')}
+      </div>
+    `;
+  }
 }
 
 function sCard(lbl,val,vc,sc,sub){
@@ -1963,7 +2094,7 @@ function simulateWorkflow(){
 }
 
 function saveWorkflow(){
-  toast('✅ '+WORKFLOWS[activeWfIdx].name+' saved successfully','ok');
+  toast('📋 '+WORKFLOWS[activeWfIdx].name+' — logic documented in Webhook Patterns tab for Make.com deployment','ok');
 }
 
 function renderWFStats(){
@@ -2472,6 +2603,55 @@ SENTIMENT SUMMARY: Escalate Now: ${sentCounts['Escalate Now']||0} | At Risk: ${s
   return ctx;
 }
 
+function updateChatSuggestions(role){
+  const sugs = {
+    vp: [
+      'What is our total revenue at risk?',
+      'Which clients have the highest churn probability?',
+      'Summary of SLA compliance this month',
+      'What is the automation ROI so far?',
+      'Which accounts need executive attention?'
+    ],
+    csm: [
+      'Which of my accounts are at risk right now?',
+      'Show me the worst sentiment clients',
+      'Which clients haven\'t been contacted recently?',
+      'Any tickets escalating for my accounts?',
+      'Which client should I call today?'
+    ],
+    manager: [
+      'Critical open tickets right now?',
+      'Which agent is over capacity?',
+      'SLA compliance summary',
+      'How many tickets need immediate escalation?',
+      'Show me sentiment-priority alignment',
+      'Which category has the most open tickets?'
+    ],
+    all: [
+      'Critical open tickets?',
+      'Which clients are at churn risk?',
+      'SLA compliance summary',
+      'Agent with highest load?',
+      'Which clients have worst sentiment right now?',
+      'How many tickets need immediate escalation?'
+    ]
+  };
+  const list = sugs[role] || sugs.all;
+  const el = document.getElementById('chatSugs');
+  if(el) el.innerHTML = list.map(s=>`<div class="chat-sug" onclick="askSuggestion(this)">${s}</div>`).join('');
+
+  // Update welcome message with role context
+  const welcome = document.getElementById('chatWelcome');
+  const name = currentUser ? currentUser.name.split(' ')[0] : '';
+  const ctx = {
+    vp: 'revenue risk, churn probability, SLA compliance, and automation ROI',
+    csm: 'your accounts, client health, churn signals, and open escalations',
+    manager: 'tickets, agent capacity, SLA compliance, and escalation patterns',
+    all: 'tickets, clients, SLA compliance, and agent performance'
+  };
+  if(welcome) welcome.innerHTML = `Hey${name?' '+name:''} — Ask me anything about ${ctx[role]||ctx.all}. I have live access to all dashboard data.`;
+}
+
 async function sendChat(){
   const input=document.getElementById('chatInput');
   const msg=input.value.trim();
@@ -2494,16 +2674,25 @@ async function sendChat(){
     }
 
     const dataCtx=buildDataContext();
-    const systemPrompt=`You are the NexusCS Ops Assistant — an internal AI for CS managers and support leads. You answer questions about dashboard data: tickets, clients, SLA, agents.
+    const roleCtx = {
+      vp: 'You are speaking to a VP or executive stakeholder. Focus on revenue impact, churn risk, high-level SLA compliance, and ROI. Lead with business outcomes, not operational detail.',
+      csm: 'You are speaking to a Customer Success Manager. Focus on their specific accounts, client health scores, churn signals, and which clients need outreach. Be proactive about flagging risks.',
+      manager: 'You are speaking to a CS Operations Manager. Focus on ticket queues, agent capacity, SLA breaches, escalation patterns, and workflow efficiency.',
+      all: 'You are speaking to a platform user. Provide complete, detailed answers across all data.'
+    };
+    const userName = currentUser ? currentUser.name : 'the user';
+    const systemPrompt=`You are the NexusCS Ops Assistant — an internal AI for CS operations teams. You answer questions about live dashboard data: tickets, clients, SLA, agents.
+
+ROLE CONTEXT: ${roleCtx[currentViewRole]||roleCtx.all}
+SPEAKING TO: ${userName}
 
 RULES:
 - Be concise (2-5 sentences for simple queries, more for detailed analysis)
 - Lead with the direct answer, then context
 - Use specific numbers and ticket IDs from the data
 - Use **bold** for key metrics and names
-- When listing items, use compact format (no verbose tables)
+- When listing items, use compact format
 - If data doesn't contain the answer, say so clearly
-- You are speaking to Arjun Sharma, CSM Lead
 - Never make up data — only use what is provided below
 - For recommendations, base them on the actual data patterns
 
