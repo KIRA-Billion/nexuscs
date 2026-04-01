@@ -523,12 +523,67 @@ tr:last-child td{border-bottom:none;}
 .int-ready{background:rgba(37,99,235,.06);color:#2563eb;border:1px solid rgba(37,99,235,.12);}
 .int-active{background:rgba(5,150,105,.06);color:#059669;border:1px solid rgba(5,150,105,.12);}
 
+/* ── ROLE SWITCHER ─────────────────────────────── */
+.role-switcher{display:flex;gap:2px;background:var(--s2);border:1.5px solid var(--b1);border-radius:9px;padding:2px;margin-left:8px;}
+.role-pill{padding:4px 10px;border-radius:7px;font-size:10px;cursor:pointer;color:var(--t3);transition:all .15s;font-family:'JetBrains Mono',monospace;white-space:nowrap;border:none;background:transparent;letter-spacing:.3px;}
+.role-pill.active{background:var(--s1);color:var(--g);border:1px solid var(--b1);box-shadow:var(--shadow-sm);font-weight:600;}
+.role-pill:hover:not(.active){color:var(--t2);background:rgba(13,147,115,.03);}
+.role-hidden{display:none!important;}
+
+/* ── HAMBURGER ────────────────────────────────── */
+.hamburger{display:none;width:34px;height:34px;background:var(--s2);border:1.5px solid var(--b1);border-radius:9px;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;transition:all .15s;border:1.5px solid var(--b1);}
+.hamburger:hover{border-color:var(--b2);background:var(--s3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(26,23,20,.4);z-index:199;backdrop-filter:blur(2px);}
+.sidebar-overlay.show{display:block;}
+
+/* ── REVENUE AT RISK ──────────────────────────── */
+.risk-card{background:linear-gradient(135deg,rgba(220,38,38,.04),rgba(220,38,38,.01));border:1.5px solid rgba(220,38,38,.18)!important;}
+.risk-card:hover{border-color:rgba(220,38,38,.3)!important;}
+.roi-card{background:linear-gradient(135deg,rgba(5,150,105,.04),rgba(5,150,105,.01));border:1.5px solid rgba(5,150,105,.18)!important;}
+.roi-card:hover{border-color:rgba(5,150,105,.3)!important;}
+
 /* ── RESPONSIVE ────────────────────────────────── */
 @media(max-width:860px){
   #app{grid-template-columns:1fr;}
-  .sidebar{display:none;}
+  .sidebar{display:none;position:fixed;top:56px;left:0;bottom:0;width:260px;z-index:200;box-shadow:var(--shadow-lg);}
+  .sidebar.mobile-open{display:flex;}
+  .hamburger{display:flex;}
   .g4{grid-template-columns:repeat(2,1fr);}
-  #tour-bar{min-width:90vw;}
+  #d-stats{grid-template-columns:repeat(2,1fr)!important;}
+  .g3{grid-template-columns:1fr;}
+  .g2{grid-template-columns:1fr;}
+  #tour-bar{min-width:90vw;padding:10px 12px;gap:8px;flex-wrap:wrap;}
+  .tour-msg{font-size:11px;}
+  .search-wrap{max-width:180px;}
+  .role-switcher{display:none;}
+  #mobileRoleSelect{display:block!important;}
+  .topbar-right .user-name{display:none;}
+  .topbar-right .logout-btn{display:none;}
+  .demo-ticker{left:0!important;font-size:9px;}
+  .chat-panel{width:calc(100vw - 16px);right:8px;bottom:76px;height:calc(100vh - 160px);}
+  .chat-fab{width:48px;height:48px;border-radius:12px;font-size:18px;bottom:16px;right:16px;}
+  .ph{flex-direction:column;gap:8px;}
+  .ph-title{font-size:20px;}
+  .view{padding:16px 12px;}
+  table{font-size:11px;}
+  th,td{padding:8px 6px;}
+  .stat-val{font-size:24px;}
+  .fbar{gap:6px;}
+  .fsel{font-size:10px;padding:6px 8px;}
+  .topbar{padding:0 12px;gap:8px;}
+  .ml-flow{padding:4px 0 12px;}
+  .wf-nodes{gap:0;}
+}
+@media(max-width:480px){
+  .g4,#d-stats{grid-template-columns:1fr!important;}
+  #d-exec-row{grid-template-columns:1fr!important;}
+  .launch-logo{font-size:42px;}
+  .launch-stats{gap:20px;flex-wrap:wrap;}
+  .ls-val{font-size:20px;}
+  .search-wrap{display:none;}
+  .tabbar{flex-wrap:wrap;}
+  .login-card{padding:28px 20px;}
+  .card{padding:14px;}
 }
 </style>
 </head>
@@ -591,10 +646,17 @@ tr:last-child td{border-bottom:none;}
 
   <!-- TOPBAR -->
   <header class="topbar">
+    <div class="hamburger" onclick="toggleMobileSidebar()">☰</div>
     <div class="logo"><div class="logo-pulse"></div>Nexus<span>CS</span></div>
     <div class="search-wrap">
       <span class="search-icon">⌕</span>
       <input class="search-bar" type="text" placeholder="Search tickets, clients, workflows..." id="gSearch" oninput="doSearch()">
+    </div>
+    <div class="role-switcher" id="roleSwitcher">
+      <button class="role-pill active" onclick="switchRole('all',this)">All Access</button>
+      <button class="role-pill" onclick="switchRole('vp',this)">VP / Stakeholder</button>
+      <button class="role-pill" onclick="switchRole('manager',this)">CS Manager</button>
+      <button class="role-pill" onclick="switchRole('agent',this)">L1 Agent</button>
     </div>
     <div class="topbar-right">
       <span class="live-chip"><span class="live-d"></span>LIVE</span>
@@ -618,34 +680,46 @@ tr:last-child td{border-bottom:none;}
     <div class="ticker-scroll" id="tickerScroll"></div>
   </div>
 
+  <!-- SIDEBAR OVERLAY (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileSidebar()"></div>
+
   <!-- SIDEBAR -->
   <nav class="sidebar" id="sidebar">
+    <div style="padding:12px 16px 8px;display:none;" id="mobileRoleSelect">
+      <div class="nav-label" style="margin-bottom:6px;">VIEW AS</div>
+      <select onchange="switchRole(this.value,null);this.blur();" style="width:100%;background:var(--s2);border:1.5px solid var(--b1);border-radius:8px;padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t1);outline:none;cursor:pointer;" id="mobileRoleSel">
+        <option value="all">All Access</option>
+        <option value="vp">VP / Stakeholder</option>
+        <option value="manager">CS Manager</option>
+        <option value="agent">L1 Agent</option>
+      </select>
+    </div>
     <div class="nav-section">
       <div class="nav-label">Overview</div>
-      <div class="nav-item active" id="nav-dashboard" onclick="gotoView('dashboard',this)"><span class="nav-icon">◈</span>Dashboard</div>
-      <div class="nav-item" id="nav-tickets" onclick="gotoView('tickets',this)"><span class="nav-icon">⊞</span>Ticket Queue<span class="nav-badge nb-red" id="n-open">0</span></div>
-      <div class="nav-item" id="nav-clients" onclick="gotoView('clients',this)"><span class="nav-icon">◉</span>Client Health<span class="nav-badge nb-orange" id="n-risk">0</span></div>
+      <div class="nav-item active" id="nav-dashboard" data-roles="all,vp,manager,agent" onclick="gotoView('dashboard',this)"><span class="nav-icon">◈</span>Dashboard</div>
+      <div class="nav-item" id="nav-tickets" data-roles="all,manager,agent" onclick="gotoView('tickets',this)"><span class="nav-icon">⊞</span>Ticket Queue<span class="nav-badge nb-red" id="n-open">0</span></div>
+      <div class="nav-item" id="nav-clients" data-roles="all,vp,manager" onclick="gotoView('clients',this)"><span class="nav-icon">◉</span>Client Health<span class="nav-badge nb-orange" id="n-risk">0</span></div>
     </div>
     <div class="nav-section">
       <div class="nav-label">Automation</div>
-      <div class="nav-item" id="nav-routing" onclick="gotoView('routing',this)"><span class="nav-icon">⇋</span>Routing Rules<span class="nav-badge nb-green">8</span></div>
-      <div class="nav-item" id="nav-workflows" onclick="gotoView('workflows',this)"><span class="nav-icon">◎</span>Workflows</div>
-      <div class="nav-item" id="nav-triage" onclick="gotoView('triage',this)"><span class="nav-icon">⚡</span>AI Triage</div>
+      <div class="nav-item" id="nav-routing" data-roles="all,manager" onclick="gotoView('routing',this)"><span class="nav-icon">⇋</span>Routing Rules<span class="nav-badge nb-green">8</span></div>
+      <div class="nav-item" id="nav-workflows" data-roles="all,manager" onclick="gotoView('workflows',this)"><span class="nav-icon">◎</span>Workflows</div>
+      <div class="nav-item" id="nav-triage" data-roles="all,manager,agent" onclick="gotoView('triage',this)"><span class="nav-icon">⚡</span>AI Triage</div>
     </div>
     <div class="nav-section">
       <div class="nav-label">Analytics</div>
-      <div class="nav-item" id="nav-sla" onclick="gotoView('sla',this)"><span class="nav-icon">◷</span>SLA Tracker</div>
-      <div class="nav-item" id="nav-analytics" onclick="gotoView('analytics',this)"><span class="nav-icon">▦</span>Analytics</div>
+      <div class="nav-item" id="nav-sla" data-roles="all,vp,manager" onclick="gotoView('sla',this)"><span class="nav-icon">◷</span>SLA Tracker</div>
+      <div class="nav-item" id="nav-analytics" data-roles="all,vp,manager" onclick="gotoView('analytics',this)"><span class="nav-icon">▦</span>Analytics</div>
     </div>
     <div class="nav-section">
       <div class="nav-label">Setup</div>
-      <div class="nav-item" id="nav-import" onclick="gotoView('import',this)"><span class="nav-icon">⇡</span>Import Data</div>
-      <div class="nav-item" id="nav-apidocs" onclick="gotoView('apidocs',this)"><span class="nav-icon">⟨/⟩</span>API Docs</div>
+      <div class="nav-item" id="nav-import" data-roles="all,manager" onclick="gotoView('import',this)"><span class="nav-icon">⇡</span>Import Data</div>
+      <div class="nav-item" id="nav-apidocs" data-roles="all,manager" onclick="gotoView('apidocs',this)"><span class="nav-icon">⟨/⟩</span>API Docs</div>
     </div>
     <div class="nav-section">
       <div class="nav-label">AI</div>
-      <div class="nav-item" id="nav-chat" onclick="toggleChat()"><span class="nav-icon">💬</span>Ops Assistant<span class="nav-badge nb-green">AI</span></div>
-      <div class="nav-item" id="nav-mlpipeline" onclick="gotoView('mlpipeline',this)"><span class="nav-icon">⟳</span>ML Pipeline<span class="nav-badge nb-green">LIVE</span></div>
+      <div class="nav-item" id="nav-chat" data-roles="all,vp,manager,agent" onclick="toggleChat()"><span class="nav-icon">💬</span>Ops Assistant<span class="nav-badge nb-green">AI</span></div>
+      <div class="nav-item" id="nav-mlpipeline" data-roles="all,vp,manager" onclick="gotoView('mlpipeline',this)"><span class="nav-icon">⟳</span>ML Pipeline<span class="nav-badge nb-green">LIVE</span></div>
     </div>
     <div class="sidebar-footer">
       <div class="savings-card">
@@ -664,11 +738,37 @@ tr:last-child td{border-bottom:none;}
     <div class="view active" id="view-dashboard">
       <div class="ph">
         <div><div class="ph-title" id="d-greeting">Good morning, Arjun 👋</div><div class="ph-sub" id="d-sub">Loading…</div></div>
-        <div style="display:flex;gap:8px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button class="btn btn-ghost" onclick="gotoView('import',document.getElementById('nav-import'))">⇡ Import CSV</button>
           <button class="btn btn-g" onclick="openCreate()">+ New Ticket</button>
         </div>
       </div>
+
+      <!-- VP/Stakeholder Executive Briefing -->
+      <div id="d-exec-row" class="g2 mb" data-dash-role="vp">
+        <div class="card risk-card" id="d-revenue-risk">
+          <div class="stat-lbl">💰 REVENUE AT RISK</div>
+          <div class="stat-val" style="color:var(--r)" id="d-risk-val">$0</div>
+          <div style="font-size:11px;color:var(--t2)" id="d-risk-sub">Loading…</div>
+          <div class="pb" style="margin-top:10px"><div class="pf" style="width:0%;background:var(--r)" id="d-risk-bar"></div></div>
+        </div>
+        <div class="card roi-card" id="d-roi-card">
+          <div class="stat-lbl">🤖 AUTOMATION ROI</div>
+          <div class="stat-val" style="color:var(--ok)" id="d-roi-val">₹0</div>
+          <div style="font-size:11px;color:var(--t2)" id="d-roi-sub">Loading…</div>
+          <div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3)">COST/HR:</span>
+            <select id="d-roi-rate" onchange="updateROI()" style="background:var(--s2);border:1px solid var(--b1);border-radius:5px;padding:2px 6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t1);outline:none;cursor:pointer;">
+              <option value="800">₹800/hr</option>
+              <option value="1000">₹1,000/hr</option>
+              <option value="1200">₹1,200/hr</option>
+              <option value="25" selected>$25/hr</option>
+              <option value="40">$40/hr</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <div class="g4" id="d-stats" style="grid-template-columns:repeat(5,1fr)"></div>
       <div class="g2">
         <div class="card" id="d-sla-card"><div class="sec">🔥 Critical Tickets</div><div id="d-crits"></div></div>
@@ -1093,6 +1193,7 @@ POST https://hooks.nexuscs.io/ingest/<span class="cv">YOUR_TOKEN</span>
 // LOGIN SYSTEM
 // ════════════════════════════════════════════════
 const USERS={
+  "admin@nexuscs.io":{pass:"nexus2025",name:"Admin",role:"Administrator",initials:"AD"},
   "arjun@nexuscs.io":{pass:"nexus2026",name:"Arjun Sharma",role:"CSM Lead",initials:"AS"},
   "priya@nexuscs.io":{pass:"nexus2026",name:"Priya Menon",role:"API Specialist",initials:"PM"},
   "vp@nexuscs.io":{pass:"nexus2026",name:"Rajesh Kumar",role:"VP Operations",initials:"RK"},
@@ -1119,6 +1220,11 @@ function doLogin(){
       if(topUser)topUser.textContent=currentUser.name+" · "+currentUser.role;
       const av=document.querySelector(".avatar");
       if(av)av.textContent=currentUser.initials;
+      // Sync role switcher with login role
+      const roleMap={lead:'manager',stakeholder:'vp',agent:'agent'};
+      const mappedRole=roleMap[role]||'all';
+      const pill=document.querySelector(`.role-pill[onclick*="'${mappedRole}'"]`);
+      if(pill) switchRole(mappedRole,pill);
     },500);
   } else {
     err.style.display="block";
@@ -1141,6 +1247,124 @@ document.addEventListener("keydown",function(e){
     doLogin();
   }
 });
+
+// ════════════════════════════════════════════════
+// ROLE-BASED VIEW SYSTEM
+// ════════════════════════════════════════════════
+let currentViewRole='all';
+const ROLE_LABELS={all:'All Access',vp:'VP / Stakeholder',manager:'CS Manager',agent:'L1 Agent'};
+
+function switchRole(role,el){
+  currentViewRole=role;
+  document.querySelectorAll('.role-pill').forEach(p=>p.classList.remove('active'));
+  if(el) el.classList.add('active');
+  else {
+    // Sync desktop pills when called from mobile
+    document.querySelectorAll('.role-pill').forEach(p=>{
+      if(p.getAttribute('onclick')&&p.getAttribute('onclick').includes("'"+role+"'")) p.classList.add('active');
+    });
+  }
+  // Sync mobile dropdown
+  const mSel=document.getElementById('mobileRoleSel');
+  if(mSel) mSel.value=role;
+
+  // Filter sidebar nav items
+  document.querySelectorAll('.nav-item[data-roles]').forEach(item=>{
+    const roles=item.dataset.roles.split(',');
+    if(roles.includes(role)){
+      item.classList.remove('role-hidden');
+    } else {
+      item.classList.add('role-hidden');
+      item.classList.remove('active');
+    }
+  });
+
+  // Show/hide nav sections if all children hidden
+  document.querySelectorAll('.nav-section').forEach(sec=>{
+    const visibleItems=sec.querySelectorAll('.nav-item:not(.role-hidden)');
+    const label=sec.querySelector('.nav-label');
+    if(visibleItems.length===0){sec.style.display='none';}else{sec.style.display='block';}
+  });
+
+  // Dashboard role-specific sections
+  const execRow=document.getElementById('d-exec-row');
+  if(execRow){
+    // VP sees executive briefing prominently; others see it smaller or in 'all'
+    execRow.style.display=(role==='vp'||role==='all'||role==='manager')?'grid':'none';
+  }
+
+  // Navigate to dashboard when switching roles
+  const dashNav=document.getElementById('nav-dashboard');
+  if(dashNav&&!dashNav.classList.contains('role-hidden')){
+    gotoView('dashboard',dashNav);
+  } else {
+    // Find first visible nav item
+    const first=document.querySelector('.nav-item:not(.role-hidden)');
+    if(first) first.click();
+  }
+
+  // Update greeting based on role
+  updateGreeting();
+  toast('👤 Switched to '+ROLE_LABELS[role]+' view','ok');
+}
+
+function updateGreeting(){
+  const el=document.getElementById('d-greeting');
+  if(!el)return;
+  const hr=new Date().getHours();
+  const greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+  const name=currentUser?currentUser.name.split(' ')[0]:'Arjun';
+  const suffix={all:'👋',vp:'— Executive Briefing 📊',manager:'— Operations Center ⚡',agent:'— Your Queue 🎫'};
+  el.textContent=greet+', '+name+' '+(suffix[currentViewRole]||'👋');
+}
+
+// ════════════════════════════════════════════════
+// MOBILE SIDEBAR
+// ════════════════════════════════════════════════
+let mobileSidebarOpen=false;
+function toggleMobileSidebar(){
+  mobileSidebarOpen=!mobileSidebarOpen;
+  document.getElementById('sidebar').classList.toggle('mobile-open',mobileSidebarOpen);
+  document.getElementById('sidebarOverlay').classList.toggle('show',mobileSidebarOpen);
+}
+
+// Close mobile sidebar when nav item clicked
+document.addEventListener('click',function(e){
+  if(mobileSidebarOpen&&e.target.closest('.nav-item')){
+    toggleMobileSidebar();
+  }
+});
+
+// ════════════════════════════════════════════════
+// REVENUE AT RISK + AUTOMATION ROI
+// ════════════════════════════════════════════════
+function renderRevenueAtRisk(){
+  const c=DB.clients;
+  if(!c.length)return;
+  const highRisk=c.filter(x=>x.churn_risk==='High');
+  const totalMRR=highRisk.reduce((s,x)=>s+parseFloat(x.mrr_usd||0),0);
+  const totalARR=highRisk.reduce((s,x)=>s+parseFloat(x.arr_usd||0),0);
+  const allMRR=c.reduce((s,x)=>s+parseFloat(x.mrr_usd||0),0);
+  const pctAtRisk=allMRR?Math.round(totalMRR/allMRR*100):0;
+
+  document.getElementById('d-risk-val').textContent='$'+totalMRR.toLocaleString()+'/mo';
+  document.getElementById('d-risk-sub').textContent=highRisk.length+' account'+(highRisk.length!==1?'s':'')+' · $'+totalARR.toLocaleString()+' ARR at risk · '+pctAtRisk+'% of portfolio';
+  document.getElementById('d-risk-bar').style.width=pctAtRisk+'%';
+  updateROI();
+}
+
+function updateROI(){
+  const t=DB.tickets;
+  if(!t.length)return;
+  const hoursAutoSaved=Math.round(t.filter(x=>x.assigned_team).length*4/60);
+  const rateEl=document.getElementById('d-roi-rate');
+  const rate=parseFloat(rateEl?rateEl.value:25);
+  const saved=hoursAutoSaved*rate;
+  const isCurrency=rate>=100;
+  const symbol=isCurrency?'₹':'$';
+  document.getElementById('d-roi-val').textContent=symbol+saved.toLocaleString();
+  document.getElementById('d-roi-sub').textContent=hoursAutoSaved+' hours saved × '+symbol+rate+'/hr · projected '+symbol+(saved*12).toLocaleString()+'/yr';
+}
 
 // ════════════════════════════════════════════════
 // DATA STORE
@@ -1283,6 +1507,7 @@ function afterLoad(msg){
   renderDashboard();renderTickets();renderClients();
   renderSLA();renderAnalytics();renderRouting();renderWFStats();
   renderApiEndpoints();renderMLPipeline();
+  renderRevenueAtRisk();
   updateSidebar();startTicker();
   if(msg)toast('✅ '+msg,'ok');
 }
@@ -1371,6 +1596,8 @@ function gotoView(name,el){
   document.getElementById('view-'+name).classList.add('active');
   if(el)el.classList.add('active');
   if(name==='triage')renderTriMetrics();
+  // Close mobile sidebar if open
+  if(mobileSidebarOpen) toggleMobileSidebar();
 }
 
 // ════════════════════════════════════════════════
@@ -1378,9 +1605,7 @@ function gotoView(name,el){
 // ════════════════════════════════════════════════
 function renderDashboard(){
   if(!DB.tickets.length)return;
-  const hr=new Date().getHours();
-  const greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
-  document.getElementById('d-greeting').textContent=greet+', Arjun 👋';
+  updateGreeting();
   const t=DB.tickets;
   const open=t.filter(x=>x.status!=='Resolved').length;
   const res=t.filter(x=>x.status==='Resolved');
